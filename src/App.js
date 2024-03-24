@@ -1,25 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
+import {  Route, Routes } from "react-router-dom";
+import "./App.css";
+import Home from "./pages/home/Home.js";
+import NotFound from "./pages/home/NotFound.js";
+import Setting from "./pages/home/Setting.js";
+import Group from "./pages/home/Group.js";
+import Profile from "./pages/home/Profile.js";
+import Layout from "./components/Layout.js"
+export default function App() {
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          {/* Nested routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/group" element={<Group />} />
+          <Route path="/setting" element={<Setting />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    
   );
 }
-
-export default App;
