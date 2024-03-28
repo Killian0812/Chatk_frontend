@@ -5,7 +5,7 @@ import Tippy from "@tippyjs/react";
 import useAuth from "../../hooks/useAuth";
 
 const USERNAME_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%_?]).{6,24}$/; // 
+const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%_?]).{6,24}$/;
 const EMAIL_REGEX = /^([^\s@]+@[^\s@]+\.[^\s@]+)$/;
 
 function UsernameTooltip({ status, hasText }) {
@@ -43,11 +43,7 @@ function Register() {
     const [hasError, setHasError] = useState(false);
     const [message, setMessage] = useState('');
 
-    const [tmpAuth, setTmpAuth] = useState({
-        username: 'Abc', email: 'some@gmail.com',
-        accessToken: "asdasda", streamToken: "adadsada",
-        image: "https://getstream.io/random_svg/?id=oliver&name=Abc"
-    });
+    const [tmpAuth, setTmpAuth] = useState(null);
     const [success, setSuccess] = useState(false);
 
     useEffect(() => {
@@ -281,7 +277,7 @@ function Register() {
                                             Register as different user?
                                         </div>
 
-                                        <button type="button" onClick={() => {
+                                        <button onClick={() => {
                                             setSuccess(false);
                                             setTmpAuth(null);
                                         }} className=" w-20 h-10 ml-2 bg-gray-500 text-white font-semibold rounded-md hover:bg-gray-600  duration-300">
