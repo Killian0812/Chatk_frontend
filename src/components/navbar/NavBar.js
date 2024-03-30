@@ -1,57 +1,50 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { BsChat, BsPerson, BsPeople, BsGear, BsPower } from "react-icons/bs"; // Importing icons from react-icons library
+import { Link, useLocation } from "react-router-dom";
+import { BsChat, BsPerson, BsPeople, BsGear, BsPower } from "react-icons/bs";
+import { LiaHandshakeSolid } from "react-icons/lia";
+import Tippy from "@tippyjs/react";
+import 'tippy.js/dist/tippy.css'; // optional
+
+const navItems = [
+  { path: "/", title: "Chats", icon: BsChat },
+  { path: "/profile", title: "Profile", icon: BsPerson },
+  { path: "/friends", title: "Friends", icon: BsPeople },
+  { path: "/groups", title: "Groups", icon: LiaHandshakeSolid },
+  { path: "/settings", title: "Settings", icon: BsGear }
+];
 
 const NavBar = () => {
+  const location = useLocation();
+
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
+
   return (
-    <div className="rounded-lg border flex flex-col gap-1 w-[300px] items-center">
-      <h1 className="text-3xl text-black font-medium p-4">
-        Chat<span className="text-blue-500">K</span>
+    <div className="border flex flex-col gap-1 items-center bg-slate-50">
+      <h1 className="text-2xl text-black font-medium p-3">
+        <img src={`${process.env.PUBLIC_URL}/appicon.png`} className="w-20 h-20" alt="app icon"></img>
       </h1>
       <div className="divider my-0"></div>
-      <ul className="flex flex-col gap-5 justify-between items-center w-full mt-10">
-        {/* Chat */}
-        <li className="p-0 text-blue flex items-center justify-center text-blue-500 hover:bg-blue-400 hover:text-white w-full">
-          <Link to={"/"} className="w-full flex justify-center">
-            <span className="p-2 flex flex-row">
-              <BsChat className="mr-2 w-5 h-5" /> Chat
-            </span>
-          </Link>
-        </li>
-
-        {/* Profile */}
-        <li className="p-0 text-blue flex items-center justify-center text-blue-500 hover:bg-blue-400 hover:text-white w-full">
-          <Link to={"/profile"} className="w-full flex justify-center h-full">
-            <span className="p-2 flex flex-row">
-              <BsPerson className="mr-2 w-5 h-5" /> Profile
-            </span>
-          </Link>
-        </li>
-
-        {/* Group */}
-        <li className="p-0 text-blue flex items-center justify-center text-blue-500 hover:bg-blue-400 hover:text-white w-full">
-          <Link to={"/group"} className="w-full flex justify-center h-full ">
-            <span className="p-2 flex flex-row">
-              <BsPeople className="mr-2 w-5 h-5" /> Group
-            </span>
-          </Link>
-        </li>
-
-        {/* Setting */}
-        <li className="p-0 text-blue flex items-center justify-center text-blue-500 hover:bg-blue-400 hover:text-white w-full">
-          <Link to={"/setting"} className="w-full flex justify-center">
-            <span className="p-2 flex flex-row">
-              <BsGear className="mr-2 w-5 h-5" /> Setting
-            </span>
-          </Link>
-        </li>
+      <ul className="flex flex-col gap-0 justify-between items-center w-full mt-9">
+        {navItems.map((item, index) => (
+          <Tippy content={item.title} placement="right">
+            <li key={index} className={`rounded-[50%] w-[70px] h-[70px] text-gray-800 flex items-center justify-center ${isActive(item.path) ? 'bg-[#E5F0FF]' : 'hover:bg-[#F1F4F9]'}`}>
+              <Link to={item.path} className="w-full flex justify-center py-4">
+                <span className="p-2 flex flex-row">
+                  <item.icon className="w-6 h-6" />
+                </span>
+              </Link>
+            </li>
+          </Tippy>
+        ))}
       </ul>
 
       {/* Logout */}
-      <li className="p-0 text-blue flex items-center justify-center text-blue-500 hover:bg-blue-400 hover:text-white w-full mt-[300px]">
+      <li className='mt-[90px] rounded-[50%] w-[70px] h-[70px] text-gray-800 flex items-center justify-center hover:bg-[#F1F4F9]'>
         <Link to={"/logout"} className="w-full flex justify-center">
           <span className="p-2 flex flex-row">
-            <BsPower className="mr-2 w-5 h-5" /> Logout
+            <BsPower className="w-6 h-6 fill-gray-700" />
           </span>
         </Link>
       </li>

@@ -4,7 +4,7 @@ import Conversations from "./Conversations.js";
 
 const SideBar = () => {
   return (
-    <div className="h-auto min-w-[350px] bg-slate-10">
+    <div className="h-auto min-w-[350px] bg-[#F5F8FD]">
       <SearchInput />
       <div className="divider px-3 my-1"></div>
       <Conversations />

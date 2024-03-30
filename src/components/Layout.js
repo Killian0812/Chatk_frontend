@@ -13,11 +13,11 @@ const LayOut = () => {
     isTyping: false,
   };
   return (
-    <div className="flex flex-row  h-full gap-0">
+    <div className="flex flex-row h-full gap-0 bg-slate-50">
       <NavBar />
       {/* content */}
       <div className="w-full">
-        <div className="flex rounded-lg bg-white min-h-screen  w-full border border-lg">
+        <div className="flex bg-white min-h-screen w-full border border-lg">
           <Outlet /> {/* This renders the nested routes */}
           <MessageContainer person={friend} />
         </div>
