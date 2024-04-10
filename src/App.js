@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
+import PersistLogin from "./components/persistlogin/PersistLogin.js";
+import Authenticate from './components/authenticate/Authenticate.js';
 import Home from "./pages/home/Home.js";
 import NotFound from "./pages/home/NotFound.js";
 import Settings from "./pages/home/Settings.js";
@@ -29,18 +31,30 @@ export default function App() {
   return (
 
     <Routes>
+
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/" element={<Layout />}>
-        {/* Nested routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/friends" element={<Friends />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/groups" element={<Groups />} />
-        <Route path="*" element={<NotFound />} />
-      </Route>
-    </Routes>
+      <Route path="/*" element={<NotFound />} />
 
+      {/* persist user login */}
+      <Route element={<PersistLogin />}>
+
+        {/* require authentication  */}
+        <Route element={<Authenticate />}>
+
+          <Route path="/" element={<Layout />}>
+            {/* Nested routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/friends" element={<Friends />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/groups" element={<Groups />} />
+          </Route>
+
+        </Route>
+
+      </Route>
+
+    </Routes>
   );
 }

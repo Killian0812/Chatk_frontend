@@ -4,6 +4,10 @@ import { BsChat, BsPerson, BsPeople, BsGear, BsPower } from "react-icons/bs";
 import { LiaHandshakeSolid } from "react-icons/lia";
 import Tippy from "@tippyjs/react";
 import 'tippy.js/dist/tippy.css'; // optional
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+
+import useLogout from "../../hooks/useLogout";
 
 const navItems = [
   { path: "/", title: "Chats", icon: BsChat },
@@ -15,10 +19,31 @@ const navItems = [
 
 const NavBar = () => {
   const location = useLocation();
+  const logout = useLogout();
 
   const isActive = (path) => {
     return location.pathname === path;
   };
+
+  const logoutConfirm = () => {
+    confirmAlert({
+      title: 'Logout confirmation',
+      message: 'Are you sure you want to log out?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => signOut()
+        },
+        {
+          label: 'No',
+        }
+      ]
+    });
+  };
+
+  const signOut = async () => {
+    await logout();
+  }
 
   return (
     <div className="border flex flex-col gap-1 items-center bg-slate-50">
@@ -29,7 +54,7 @@ const NavBar = () => {
       <ul className="flex flex-col gap-0 justify-between items-center w-full mt-9">
         {navItems.map((item, index) => (
           <Tippy key={index} content={item.title} placement="right">
-            <li  className={`rounded-[50%] w-[70px] h-[70px] text-gray-800 flex items-center justify-center ${isActive(item.path) ? 'bg-[#E5F0FF]' : 'hover:bg-[#F1F4F9]'}`}>
+            <li className={`rounded-[50%] w-[70px] h-[70px] text-gray-800 flex items-center justify-center ${isActive(item.path) ? 'bg-[#E5F0FF]' : 'hover:bg-[#F1F4F9]'}`}>
               <Link to={item.path} className="w-full flex justify-center py-4">
                 <span className="p-2 flex flex-row">
                   <item.icon className="w-6 h-6" />
@@ -41,12 +66,12 @@ const NavBar = () => {
       </ul>
 
       {/* Logout */}
-      <li className='mt-[90px] rounded-[50%] w-[70px] h-[70px] text-gray-800 flex items-center justify-center hover:bg-[#F1F4F9]'>
-        <Link to={"/logout"} className="w-full flex justify-center">
+      <li onClick={logoutConfirm} className='mt-[90px] rounded-[50%] w-[70px] h-[70px] text-gray-800 flex items-center justify-center hover:bg-[#F1F4F9]'>
+        <div className="w-full flex justify-center">
           <span className="p-2 flex flex-row">
             <BsPower className="w-6 h-6 fill-gray-700" />
           </span>
-        </Link>
+        </div>
       </li>
     </div>
   );
