@@ -154,7 +154,8 @@ const GeneralInfoForm = () => {
 
             <div className="flex flex-col justify-center mb-7 mt-[-20px] mx-3 relative">
               <button
-                disabled={loading || !validEmail || !validFullname || (fullname === auth.fullname && email === auth.email)}
+                disabled={loading || (!validEmail && email !== "") || (!validFullname && fullname !== "")
+                  || (fullname === auth.fullname && email === auth.email && !avatar)}
                 onClick={() => {
                   setLoading(true);
                   handleSubmit();

@@ -20,22 +20,23 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        console.log(identifier, password);
         try {
-            const response = await axios.post('/api/auth', { username: identifier, password });
+            const response = await axios.post('/api/auth', { identifier, password });
             // console.log(response.data);
+            const username = response?.data?.username;
             const accessToken = response?.data?.accessToken;
             const fullname = response?.data?.fullname;
             const email = response?.data?.email;
             const streamToken = response?.data?.streamToken;
             const image = response?.data?.image;
-            setAuth({ username: identifier, fullname, email, accessToken, streamToken, image });
+            setAuth({ username, fullname, email, accessToken, streamToken, image });
             setIdentifier('');
             setPassword('');
             setHasError(false);
             navigate(from, { replace: true });
         } catch (error) {
             setHasError(true);
+            console.log(error);
             if (!error?.response) {
                 setMessage('No server response');
             } else if (error.response?.status === 400) {

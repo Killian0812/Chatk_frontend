@@ -12,6 +12,7 @@ export const SocketProvider = ({ children }) => {
     useEffect(() => {
         if (auth?.username) {
             const newSocket = io("http://localhost:8080", {
+            // const newSocket = io("https://ngcuong0812.id.vn", {
                 query: {
                     username: auth.username,
                 },
@@ -19,7 +20,7 @@ export const SocketProvider = ({ children }) => {
             // console.log(newSocket);
             setSocket(newSocket);
         } else {
-            console.log(`No auth`);
+            console.error(`Not authenticated`);
         }
     }, [auth]);
 
