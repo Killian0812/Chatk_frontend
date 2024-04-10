@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 function Register() {
 
@@ -11,15 +12,34 @@ function Register() {
     const [hasError, setHasError] = useState(false);
     const [message, setMessage] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(username, email, password, cfPassword);
 
         // use regex to check validation
 
-        // if all validation passed, sent request here
-
-        // if request 200 OK, clear all inputs and show 'Register successful'
+        // if all validation passed
+        try {
+            await axios.post('/api/register', { username, password, email });
+            setUsername('');
+            setEmail('');
+            setPassword('');
+            setCfPassword('');
+            setHasError(false);
+            setMessage('Success! Please go to login page.');
+        } catch (error) {
+            setHasError(true);
+            if (!error?.response) {
+                setMessage('No server response');
+            } else if (error.response?.status === 409) {
+                if (error.response.data.taken === 1)
+                    setMessage('Email taken');
+                else
+                    setMessage('Username taken');
+            } else {
+                setMessage('Registration failed')
+            }
+        }
     };
     return (
         <div className="h-screen w-screen flex bg-white">
@@ -91,7 +111,7 @@ function Register() {
                         {/* Submit */}
                         <div className="mt-[15rem] flex justify-end mr-5">
 
-                            <span className={`flex-1 max-w-[200px] px-5 ${hasError ? 'text-red-600' : 'text-green-600'}`}>{message}</span>
+                            <span className={`flex-1 max-w-[200px] pl-1 ${hasError ? 'text-red-600' : 'text-green-600'}`}>{message}</span>
 
                             <button
                                 type="submit"
@@ -103,9 +123,9 @@ function Register() {
 
 
                     </form>
-                    {/* Login */}
 
-                    <div className="border-t-2 pt-4 mt-4 ml-5 flex items-center">
+                    {/* Login */}
+                    <div className="border-t-2 pt-4 mt-4 px-3 flex items-center">
                         <div className="text-md text-gray-500 font-normal">
                             Have an account?
                         </div>
