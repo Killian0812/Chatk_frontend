@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { jwtDecode } from "jwt-decode";
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 
@@ -16,6 +17,46 @@ function Login() {
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
+
+    // const navigate = useNavigate();
+    // const { setAuth } = useAuth();
+
+    async function handleCallbackResponse(response) {
+        const GoogleUserInfo = jwtDecode(response.credential);
+        // console.log(GoogleUserInfo);
+        try {
+            const response = await axios.post('/api/auth/google', {
+                email: GoogleUserInfo.email,
+                name: GoogleUserInfo.name,
+                picture: GoogleUserInfo.picture
+            });
+            console.log(response.data);
+            const username = response?.data?.username;
+            const accessToken = response?.data?.accessToken;
+            const fullname = response?.data?.fullname;
+            const email = response?.data?.email;
+            const streamToken = response?.data?.streamToken;
+            const image = response?.data?.image;
+            setAuth({ username, fullname, email, accessToken, streamToken, image });
+            navigate('/', { replace: true });
+        } catch (error) {
+            console.log(error);
+            alert('Unexpected error');
+        }
+    }
+
+    useEffect(() => {
+        /* global google */
+        google.accounts.id.initialize({
+            client_id:
+                "118692739109-em2kp06md5s62ee8533ugpq3usq5e684.apps.googleusercontent.com",
+            callback: handleCallbackResponse,
+        });
+        google.accounts.id.renderButton(
+            document.getElementById('signInWithGoogle'),
+            { theme: 'outline', size: 'large' }
+        );
+    });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -54,14 +95,6 @@ function Login() {
     const toggleTrusted = () => {
         setTrusted(prev => !prev);
     }
-
-    useEffect(() => {
-        /* global google */
-        google.accounts.id.renderButton(
-            document.getElementById('signInWithGoogle'),
-            { theme: 'outline', size: 'large' }
-        );
-    }, []);
 
     return (
         <div className="h-screen w-screen flex bg-white">
