@@ -17,7 +17,7 @@ const SearchInput = () => {
         </label>
         <div className="relative">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <CiSearch className="ml-2" />
+            <CiSearch className="w-5 h-5 ml-4" />
           </div>
           <input
             type="search"

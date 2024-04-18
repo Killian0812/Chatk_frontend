@@ -2,7 +2,7 @@ import React from "react";
 
 const Conversation = ({ friend }) => {
   return (
-    <div className="flex items-center p-4 border-b border-gray-200 hover:bg-sky-100 overflow-hidden">
+    <div className="flex items-center p-4 border-b border-gray-200 hover:bg-sky-100 hover:cursor-pointer overflow-hidden">
       <div className="mr-4">
         <div className="relative">
           <img
@@ -18,7 +18,7 @@ const Conversation = ({ friend }) => {
         </div>
       </div>
       <div className="flex-1">
-        <div className="font-medium">{friend.friendName}</div>
+        <div className="font-medium text-black opacity-90">{friend.friendName}</div>
         <div className="text-xs text-gray-500">{friend.latestMessage}</div>
       </div>
       <div className="text-xs text-gray-500">{friend.lastMessageTime}</div>
