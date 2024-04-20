@@ -1,7 +1,11 @@
 import {
   Channel, MessageInput, MessageList, Thread, Window, useChatContext,
 } from 'stream-chat-react';
-import { IoIosVideocam, IoIosCall } from 'react-icons/io';
+import { IoIosVideocam, IoIosCall, IoIosMenu } from 'react-icons/io';
+import Tippy from "@tippyjs/react";
+import { MdDeleteOutline } from "react-icons/md";
+import { CgLogOut } from "react-icons/cg";
+import { confirmAlert } from 'react-confirm-alert';
 import { EmojiPicker } from 'stream-chat-react/emojis';
 import { init, SearchIndex } from 'emoji-mart';
 import data from '@emoji-mart/data';
@@ -13,7 +17,7 @@ init({ data });
 
 const ChannelHeader = ({ channelData, members, memberIds, handleStartCall }) => {
 
-  const { client } = useChatContext();
+  const { client, setActiveChannel } = useChatContext();
 
   const isGroup = channelData?.isGroup;
 
@@ -22,6 +26,98 @@ const ChannelHeader = ({ channelData, members, memberIds, handleStartCall }) => 
   const index = finalMemberIds.findIndex(id => id !== client.userID);
 
   const otherUser = members[Object.keys(members)[index]];
+
+  const axiosPrivate = useAxiosPrivate();
+
+  const deleteConversation = async () => {
+    try {
+      await axiosPrivate.put(`/api/chat/delete/${channelData?.cid}`)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const leaveGroup = async () => {
+    axiosPrivate.put(`/api/group/leave/${channelData?.cid}`).then(() => {
+      setActiveChannel(null);
+    }).catch(error => {
+      console.log(error);
+    });
+  }
+
+  const actionConfirm = ({ action }) => {
+    confirmAlert({
+      closeOnEscape: true,
+      closeOnClickOutside: true,
+      customUI: ({ onClose }) => {
+        return (
+          <div className="bg-[rgba(39,38,38,0.1)] fixed inset-0 flex items-center justify-center ">
+            <div className="bg-white p-6 rounded-lg max-w-md w-full">
+              <h1 className="text-xl text-black font-bold mb-4">{action === "Delete" ? 'Delete conversation' : 'Leave group'}</h1>
+              {
+                action === "Delete" ?
+                  <p className="text-gray-600 mb-6">Every messages, files, audios in the conversation will be deleted.
+                    <br></br>Action not reversible!</p>
+                  : <p className="text-gray-600 mb-6">You will no longer have access to the chat.
+                    <br></br>Action not reversible!</p>
+              }
+              <div className="flex justify-end">
+                <button
+                  className="mr-2 px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400 text-white"
+                  onClick={onClose}
+                >
+                  No
+                </button>
+                <button
+                  className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                  onClick={() => {
+                    if (action === 'Delete')
+                      deleteConversation();
+                    else {
+                      leaveGroup();
+                    }
+                    onClose();
+                  }}
+                >
+                  {action === "Delete" ? 'Yes, confirm delete' : 'Yes, confirm leave'}
+                </button>
+              </div>
+            </div>
+          </div >
+        );
+      },
+    });
+  }
+
+  const chatOptions = () => {
+    return (
+      <div className="w-auto h-auto flex flex-col gap-0">
+        {
+          (!isGroup || (isGroup && channelData?.created_by?.id === client.userID)) && (
+            <div
+              onClick={() => actionConfirm({ action: 'Delete' })}
+              className="flex cursor-pointer space-x-2 text-red-500 text-base hover:bg-gray-200 font-medium text-center p-1"
+            >
+              <MdDeleteOutline size={24} />
+              <span className='select-none'>Delete conversation</span>
+            </div>
+          )
+        }
+        {
+          (isGroup && channelData?.created_by?.id !== client.userID) && (
+            <div
+              onClick={() => actionConfirm({ action: 'Leave' })}
+              className="flex cursor-pointer space-x-2 text-red-500 text-base hover:bg-gray-200 font-medium text-center p-1"
+            >
+              <CgLogOut size={24} />
+              <span className='select-none'>Leave group</span>
+            </div>
+          )
+        }
+      </div>
+    );
+  }
+
 
   return (
     <div className='str-chat__header-livestream'>
@@ -46,6 +142,18 @@ const ChannelHeader = ({ channelData, members, memberIds, handleStartCall }) => 
         <button className="call-button" onClick={() => handleStartCall('video')}>
           <IoIosVideocam size={30} color='#007bff' />
         </button>
+        <Tippy
+          content={chatOptions()}
+          animation="scale"
+          placement="bottom-end"
+          interactive={true}
+          theme={"light"}
+          trigger='click'
+        >
+          <button className="call-button" >
+            <IoIosMenu size={30} color='#007bff' />
+          </button>
+        </Tippy>
       </div>
     </div>
   );

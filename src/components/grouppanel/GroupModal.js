@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaImages } from "react-icons/fa";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from "../../hooks/useAuth";
+import Tippy from "@tippyjs/react";
 
 function GroupModal({ toggleModal, status, editGroup, onCreateGroup, onEditGroup }) {
     const { auth } = useAuth();
@@ -194,13 +195,15 @@ function GroupModal({ toggleModal, status, editGroup, onCreateGroup, onEditGroup
                     <div className="flex flex-wrap max-w-[65%] h-auto">
                         {
                             list.map((user, id) => {
-                                return <div key={id} className="inline-block w-[60px] mr-[5px] relative">
-                                    <div className="w-full flex justify-center">
-                                        <img className="w-10 h-10 rounded-full object-cover" src={user.image} alt="" />
-                                        <button onClick={() => removeUser(user._id)} className="top-0 left-10 rounded-full bg-red-600 font-bold text-[10px] text-white absolute w-3.5 h-3.5"> X </button>
+                                return <Tippy key={id} content={user.username} placement="bottom">
+                                    <div className="inline-block w-[60px] mr-[5px] relative">
+                                        <div className="w-full flex justify-center">
+                                            <img className="w-10 h-10 rounded-full object-cover" src={user.image} alt="" />
+                                            <button onClick={() => removeUser(user._id)} className="top-0 left-10 rounded-full bg-red-600 font-bold text-[10px] text-white absolute w-3.5 h-3.5"> X </button>
+                                        </div>
+                                        <p className="font-medium text-center text-black text-[14px] truncate max-w-[60px]">{user.username}</p>
                                     </div>
-                                    <p className="font-medium text-black text-[14px] truncate max-w-[60px]">{user.username}</p>
-                                </div>
+                                </Tippy>
                             })
                         }
                     </div>

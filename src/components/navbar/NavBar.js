@@ -1,19 +1,17 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { BsChat, BsPerson, BsPeople, BsGear, BsPower } from "react-icons/bs";
-import { LiaHandshakeSolid } from "react-icons/lia";
 import Tippy from "@tippyjs/react";
-import 'tippy.js/dist/tippy.css'; // optional
-import { confirmAlert } from 'react-confirm-alert'; // Import
-import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import 'tippy.js/dist/tippy.css'; 
+import { confirmAlert } from 'react-confirm-alert'; 
+import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
 import useLogout from "../../hooks/useLogout";
 
 const navItems = [
   { path: "/", title: "Chats", icon: BsChat },
   { path: "/profile", title: "Profile", icon: BsPerson },
-  { path: "/friends", title: "Friends", icon: BsPeople },
-  { path: "/groups", title: "Groups", icon: LiaHandshakeSolid },
+  { path: "/groups", title: "Groups", icon: BsPeople },
   { path: "/settings", title: "Settings", icon: BsGear }
 ];
 
