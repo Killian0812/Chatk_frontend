@@ -28,8 +28,8 @@ const NavBar = () => {
       <div className="divider my-0"></div>
       <ul className="flex flex-col gap-0 justify-between items-center w-full mt-9">
         {navItems.map((item, index) => (
-          <Tippy content={item.title} placement="right">
-            <li key={index} className={`rounded-[50%] w-[70px] h-[70px] text-gray-800 flex items-center justify-center ${isActive(item.path) ? 'bg-[#E5F0FF]' : 'hover:bg-[#F1F4F9]'}`}>
+          <Tippy key={index} content={item.title} placement="right">
+            <li  className={`rounded-[50%] w-[70px] h-[70px] text-gray-800 flex items-center justify-center ${isActive(item.path) ? 'bg-[#E5F0FF]' : 'hover:bg-[#F1F4F9]'}`}>
               <Link to={item.path} className="w-full flex justify-center py-4">
                 <span className="p-2 flex flex-row">
                   <item.icon className="w-6 h-6" />

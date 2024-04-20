@@ -3,7 +3,7 @@ import NavBar from "./navbar/NavBar.js";
 import { Outlet } from "react-router-dom";
 import MessageContainer from "./messages/MessageContainer.js";
 
-const LayOut = () => {
+const Layout = () => {
   const friend = {
     name: "Penaldo",
     latestMessage: "Hey, give me a penalty?",
@@ -25,4 +25,4 @@ const LayOut = () => {
     </div>
   );
 };
-export default LayOut;
+export default Layout;
