@@ -1,21 +1,59 @@
 import { useEffect, useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import useAuth from "../../hooks/useAuth";
+import axios from "axios";
 
 function Login() {
 
-    const clientID = '118692739109-em2kp06md5s62ee8533ugpq3usq5e684.apps.googleusercontent.com';
-    const clientSecret = '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';
+    // const clientID = '118692739109-em2kp06md5s62ee8533ugpq3usq5e684.apps.googleusercontent.com';
+    // const clientSecret = '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';
 
     const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');
 
     const [hasError, setHasError] = useState(false);
+    const [message, setMessage] = useState('');
 
-    const handleSubmit = (e) => {
+    const { setAuth, trusted, setTrusted } = useAuth();
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         console.log(identifier, password);
+        try {
+            const response = await axios.post('/api/auth', { username: identifier, password });
+            console.log(response.data);
+            const accessToken = response?.data?.accessToken;
+            const fullname = response?.data?.fullname;
+            const email = response?.data?.email;
+            setAuth({ identifier, fullname, email, accessToken });
+            setIdentifier('');
+            setPassword('');
+            setHasError(false);
+            navigate(from, { replace: true });
+        } catch (error) {
+            setHasError(true);
+            if (!error?.response) {
+                setMessage('No server response');
+            } else if (error.response?.status === 400) {
+                setMessage(error.response.data);
+            } else {
+                setMessage('Internal server error');
+            }
+        }
     };
+
+    useEffect(() => {
+        localStorage.setItem("trusted", trusted);
+    }, [trusted])
+
+    const toggleTrusted = () => {
+        setTrusted(prev => !prev);
+    }
 
     useEffect(() => {
         /* global google */
@@ -70,12 +108,10 @@ function Login() {
 
                         {/* Submit */}
                         <div className="mt-28 ml-5 flex justify-between items-center mr-5">
-                            <Link to="/forgot">
-                                <div className='inline text-sm font-light text-gray-500'>
-                                    Forgot password?
-                                </div>
-                            </Link>
-
+                            <div className='flex justify-between items-center mt-[-20px]'>
+                                <input type='checkbox' id='trusted' className="checkbox-primary checkbox w-4 h-4" onChange={toggleTrusted} checked={trusted}></input>
+                                <label htmlFor='trusted' className="text-sm pl-1">Trust this device</label>
+                            </div>
                             <button
                                 type="submit"
                                 className="inline-block w-16 h-10 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 duration-300"
@@ -84,11 +120,20 @@ function Login() {
                             </button>
                         </div>
 
-
+                        <div className="flex justify-end mt-2">
+                            <span className={`flex-1 w-[100px] pl-5 ${hasError ? 'text-red-600' : 'text-green-600'}`}>{message}</span>
+                            <Link to="/forgot" className="mr-4">
+                                <div className='inline text-sm font-light text-gray-500 underline underline-offset-4'>
+                                    Forgot password?
+                                </div>
+                            </Link>
+                        </div>
                     </form>
 
+                    <hr className="w-[90%] self-center border-gray-300 mt-5" />
+
                     {/* Register */}
-                    <div className="border-t-2 pt-4 mt-4 ml-5 flex items-center">
+                    <div className="pt-4 mt-1 px-3 flex items-center">
                         <div className=" text-md text-gray-500 font-normal">
                             No account?
                         </div>
@@ -103,11 +148,10 @@ function Login() {
                             </button>
                         </Link>
                     </div>
-                    <span className='self-center pt-4'>or</span>
+                    <span className='self-center pt-2'>or</span>
 
                     {/* Google Login */}
-                    <div className='flex justify-center items-center mt-4 mb-6'>
-                        {/* <GGLogin /> */}
+                    <div className='flex justify-center items-center mt-2 mb-6'>
                         <div id='signInWithGoogle'></div>
                     </div>
 
