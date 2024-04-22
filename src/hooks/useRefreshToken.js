@@ -13,7 +13,8 @@ const useRefreshToken = () => {
             username: response.data.username,
             fullname: response.data.fullname,
             email: response.data.email,
-            accessToken: response.data.accessToken  // replace old access token
+            accessToken: response.data.accessToken,  
+            streamToken: response.data.streamToken
         });
         return response.data.accessToken;
     }
