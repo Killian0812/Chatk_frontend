@@ -1,23 +1,89 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import Tippy from "@tippyjs/react";
+
+const USERNAME_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
+const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%_?]).{6,24}$/; // 
+const EMAIL_REGEX = /^([^\s@]+@[^\s@]+\.[^\s@]+)$/;
+
+function UsernameTooltip({ status, hasText }) {
+    if (hasText === "") return 'Username must contain 4 to 24 characters and start with a letter'
+    return `Username must contain 4 to 24 characters and start with a letter ${status ? '✔️' : '❌'} `
+
+}
+function PasswordTooltip({ status, hasText }) {
+    if (hasText === "") return `Password must contain 6 to 24 characters, must include uppercase and lowercase letters , a number, a special character`
+    return `Password must contain 8 to 24 characters, must include uppercase and lowercase letters , a number, a special character ${status ? '✔️' : '❌'} `
+}
+function EmailTooltip({ status, hasText }) {
+    if (hasText === "") return `Must be a valid email address`
+    return `Must be a valid email address ${status ? '✔️' : '❌'} `
+}
+function PasswordCfTooltip({ status, hasText }) {
+    if (hasText === "") return `Make sure your confirm password matches the one entered above`
+    return `Make sure your confirm password matches the one entered above ${status ? '✔️' : '❌'} `
+}
+
 
 function Register() {
 
     const [username, setUsername] = useState('');
+    const [validName, setValidName] = useState(false);
+
     const [email, setEmail] = useState('');
+    const [validEmail, setValidEmail] = useState(false);
+
     const [password, setPassword] = useState('');
+    const [validPwd, setValidPwd] = useState(false);
+
     const [cfPassword, setCfPassword] = useState('');
+    const [validMatch, setValidMatch] = useState(false);
 
     const [hasError, setHasError] = useState(false);
     const [message, setMessage] = useState('');
+
+    useEffect(() => {
+        setValidName(USERNAME_REGEX.test(username));
+
+    }, [username])
+
+    useEffect(() => {
+        setValidEmail(EMAIL_REGEX.test(email))
+
+    }, [email])
+
+    useEffect(() => {
+        setValidPwd(PWD_REGEX.test(password));
+        setValidMatch(password === cfPassword);
+    }, [password, cfPassword])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(username, email, password, cfPassword);
 
         // use regex to check validation
-
+        if(!validName) {
+            setHasError(true);
+            setMessage("Not a valid username")
+            return;
+        }
+        else if(!validEmail) {
+            setHasError(true);
+            setMessage("Not a valid email")
+            return;
+        }
+        else if(!validPwd) {
+            setHasError(true);
+            setMessage("Not a valid password")
+            return;
+        }
+        else if(!validMatch) {
+            setHasError(true);
+            setMessage("Confirm password doesn't match")
+            return;
+        }
+            
         // if all validation passed
         try {
             await axios.post('/api/register', { username, password, email });
@@ -66,52 +132,77 @@ function Register() {
                         {/* Input */}
                         <div className="ml-5 mr-5 relative">
                             <label htmlFor="username" className="absolute px-1 font-semibold bg-white left-3 z-20 text-blue-600 text-xs  " > Username</label>
-                            <input
-                                type="text"
-                                id="username"
-                                autoComplete="off"
-                                className="outline-0 absolute top-2 z-10 rounded-sm py-1.5 pl-3 w-full bg-white text-gray-900 border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)} />
+                            <Tippy
+                                hideOnClick="false"
+                                placement="left"
+                                trigger="focus"
+                                content={<UsernameTooltip status={validName} hasText={username} />}
+                            >
+                                <input
+                                    type="text"
+                                    id="username"
+                                    autoComplete="off"
+                                    className="outline-0 absolute top-2 z-10 rounded-sm py-1.5 pl-3 w-full bg-white text-gray-900 border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)} />
+                            </Tippy>
                         </div>
 
                         <div className="mt-14 ml-5 mr-5 relative">
                             <label htmlFor="email" className="absolute px-1 font-semibold bg-white left-3 z-20 text-blue-600 text-xs  " > Email</label>
-                            <input
-                                type="text"
-                                id="email"
-                                autoComplete="off"
-                                className="outline-0 absolute top-2 z-10 rounded-sm py-1.5 pl-3 w-full bg-white text-gray-900 border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)} />
+                            <Tippy
+                                hideOnClick="false"
+                                placement="left"
+                                trigger="focus"
+                                content={<EmailTooltip status={validEmail} hasText={email} />}>
+                                <input
+                                    type="text"
+                                    id="email"
+                                    autoComplete="off"
+                                    className="outline-0 absolute top-2 z-10 rounded-sm py-1.5 pl-3 w-full bg-white text-gray-900 border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)} />
+                            </Tippy>
                         </div>
 
                         <div className="mt-28 ml-5 mr-5 relative">
                             <label htmlFor="password" className="absolute px-1 font-semibold bg-white left-3 z-20 text-blue-600 text-xs  " > Password </label>
-                            <input
-                                type="password"
-                                id="password"
-                                autoComplete="off"
-                                className="outline-0 absolute top-2 z-10 rounded-sm py-1.5 pl-3 w-full bg-white text-gray-900 border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)} />
+                            <Tippy
+                                hideOnClick="false"
+                                placement="left"
+                                trigger="focus"
+                                content={<PasswordTooltip status={validPwd} hasText={password} />}>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    autoComplete="off"
+                                    className="outline-0 absolute top-2 z-10 rounded-sm py-1.5 pl-3 w-full bg-white text-gray-900 border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)} />
+                            </Tippy>
                         </div>
 
                         <div className="mt-[10.5rem] ml-5 mr-5 relative">
                             <label htmlFor="password-cf" className="absolute px-1 font-semibold bg-white left-3 z-20 text-blue-600 text-xs" > Confirm Password </label>
-                            <input
-                                type="password"
-                                id="password-cf"
-                                autoComplete="off"
-                                className="outline-0 absolute top-2 z-10 rounded-sm py-1.5 pl-3 w-full bg-white text-gray-900 border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
-                                value={cfPassword}
-                                onChange={(e) => setCfPassword(e.target.value)} />
+                            <Tippy
+                                hideOnClick="false"
+                                placement="left"
+                                trigger="focus"
+                                content={<PasswordCfTooltip status={validMatch} hasText={cfPassword} />}>
+                                <input
+                                    type="password"
+                                    id="password-cf"
+                                    autoComplete="off"
+                                    className="outline-0 absolute top-2 z-10 rounded-sm py-1.5 pl-3 w-full bg-white text-gray-900 border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
+                                    value={cfPassword}
+                                    onChange={(e) => setCfPassword(e.target.value)} />
+                            </Tippy>
                         </div>
 
                         {/* Submit */}
                         <div className="mt-[15rem] flex justify-end mr-5">
 
-                            <span className={`flex-1 max-w-[200px] pl-1 ${hasError ? 'text-red-600' : 'text-green-600'}`}>{message}</span>
+                            <span className={`flex-1 max-w-[200px] pl-0 pr-1 ${hasError ? 'text-red-600' : 'text-green-600'}`}>{message}</span>
 
                             <button
                                 type="submit"
