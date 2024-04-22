@@ -1,15 +1,26 @@
 import React from "react";
-import SearchInput from "./SearchInput.js";
-import Conversations from "./Conversations.js";
+import { ChannelList, useChatContext } from "stream-chat-react";
 
-const SideBar = () => {
+import CustomChannel from "./Channel";
+import CustomSearchResult from "./SearchResult";
+
+const ChatPanel = () => {
+
+  const { client } = useChatContext();
+  const filters = { members: { $in: [client.user.id] }, type: 'messaging' };
+  const options = { presence: true, state: true };
+  const sort = { last_message_at: -1 };
+
   return (
-    <div className="h-auto min-w-[350px] bg-[#F5F8FD]">
-      <SearchInput />
-      <div className="divider px-3 my-1"></div>
-      <Conversations />
+    <div className='w-[350px] bg-[#F5F8FD]'>
+      <h1 className="font-medium w-[350px] text-blue-500 text-2xl p-3">Chats</h1>
+      <ChannelList Preview={CustomChannel} sort={sort} filters={filters} options={options}
+        showChannelSearch additionalChannelSearchProps={{
+          searchForChannels: false,
+          SearchResultItem: CustomSearchResult,
+        }} />
     </div>
   );
 };
 
-export default SideBar;
+export default ChatPanel;

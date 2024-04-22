@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => {
     const [logoutConfirm, setLogoutConfirm] = useState(false);
     const [trusted, setTrusted] = useState(JSON.parse(localStorage.getItem("trusted") || false));
 
-    console.log(trusted);
+    // console.log(trusted);
     
     return (
         <AuthContext.Provider value={{ auth, setAuth, trusted, setTrusted, logoutConfirm, setLogoutConfirm }}>

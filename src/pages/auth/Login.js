@@ -26,11 +26,12 @@ function Login() {
         console.log(identifier, password);
         try {
             const response = await axios.post('/api/auth', { username: identifier, password });
-            console.log(response.data);
+            // console.log(response.data);
             const accessToken = response?.data?.accessToken;
             const fullname = response?.data?.fullname;
             const email = response?.data?.email;
-            setAuth({ identifier, fullname, email, accessToken });
+            const streamToken = response?.data?.streamToken;
+            setAuth({ username: identifier, fullname, email, accessToken, streamToken });
             setIdentifier('');
             setPassword('');
             setHasError(false);
