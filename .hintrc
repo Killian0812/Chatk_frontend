@@ -11,14 +11,17 @@
         ]
       }
     ],
-    "compat-api/css": [
-      "default",
-      {
-        "ignore": [
-          "scrollbar-width",
-          "scrollbar-color"
-        ]
-      }
-    ]
-  }
+    "compat-api/css": "off"
+  },
+  "browserslist": [
+    "defaults",
+    "not ie 11",
+    "not and_chr <= 118",
+    "not chrome <= 117",
+    "not edge <= 117",
+    "not ios_saf <= 14.8",
+    "not opera <= 102",
+    "not safari <= 14.1",
+    "not samsung <= 22"
+  ]
 }
