@@ -4,7 +4,6 @@ import { jwtDecode } from "jwt-decode";
 
 import PersistLogin from "./components/persistlogin/PersistLogin.js";
 import Authenticate from './components/authenticate/Authenticate.js';
-import Home from "./pages/home/Home.js";
 import NotFound from "./pages/home/NotFound.js";
 import Settings from "./pages/home/Settings.js";
 import Friends from "./pages/home/Friends.js";
@@ -44,7 +43,6 @@ export default function App() {
 
           <Route path="/" element={<Layout />}>
             {/* Nested routes */}
-            <Route path="/" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/friends" element={<Friends />} />
             <Route path="/settings" element={<Settings />} />
