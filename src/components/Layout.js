@@ -1,10 +1,11 @@
 import { useCreateChatClient, Chat } from "stream-chat-react";
 
 import NavBar from "./navbar/NavBar.js";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import MessageContainer from "./messages/MessageContainer.js";
 import useAuth from "../hooks/useAuth.js";
 import Loading from "./Loading.js";
+import ChatPanel from "./chatpanel/ChatPanel.js";
 
 const Layout = () => {
   const { auth } = useAuth();
@@ -21,6 +22,9 @@ const Layout = () => {
     },
   });
 
+  const path = useLocation().pathname;
+  console.log(path);
+
   if (!client)
     return <Loading />
 
@@ -31,6 +35,9 @@ const Layout = () => {
       <div className="w-full">
         <div className="flex bg-white min-h-screen w-full border border-lg">
           <Chat client={client}>
+            <div className={path !== '/' ? 'hidden' : ''}>
+              <ChatPanel />
+            </div>
             <Outlet />
             <MessageContainer />
           </Chat>
