@@ -1,8 +1,10 @@
 //EditGroupModal.js
 import React, { useEffect, useState } from "react";
 import { FaImages } from "react-icons/fa";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 function EditGroupModal({ closeModal, status }) {
+    const axiosPrivate = useAxiosPrivate();
     const [groupName, setGroupName] = useState('');
     const [userAdd, setUserAdd] = useState('');
     const [groupAvatar, setGroupAvatar] = useState();
@@ -10,57 +12,69 @@ function EditGroupModal({ closeModal, status }) {
     const [error, setError] = useState(false);
     const [message, setMessage] = useState("");
 
-    var memberListFake = [
-        { id: 1, name: "user1", icon: "https://external-preview.redd.it/VJjeNbJwVx5M3KuBsArppbiwA7EHP4zZSGnjfzwh9m8.jpg?width=1080&crop=smart&auto=webp&s=53e98287cc6f1b801e44e2adbbc7a4be85eab133" },
-        { id: 2, name: "user2", icon: "https://external-preview.redd.it/VJjeNbJwVx5M3KuBsArppbiwA7EHP4zZSGnjfzwh9m8.jpg?width=1080&crop=smart&auto=webp&s=53e98287cc6f1b801e44e2adbbc7a4be85eab133" },
-        { id: 3, name: "user3", icon: "https://external-preview.redd.it/VJjeNbJwVx5M3KuBsArppbiwA7EHP4zZSGnjfzwh9m8.jpg?width=1080&crop=smart&auto=webp&s=53e98287cc6f1b801e44e2adbbc7a4be85eab133" },
-        { id: 4, name: "user4", icon: "https://external-preview.redd.it/VJjeNbJwVx5M3KuBsArppbiwA7EHP4zZSGnjfzwh9m8.jpg?width=1080&crop=smart&auto=webp&s=53e98287cc6f1b801e44e2adbbc7a4be85eab133" },
-        { id: 5, name: "userlongname", icon: "https://external-preview.redd.it/VJjeNbJwVx5M3KuBsArppbiwA7EHP4zZSGnjfzwh9m8.jpg?width=1080&crop=smart&auto=webp&s=53e98287cc6f1b801e44e2adbbc7a4be85eab133" },
-    ]
-
     const style = { color: "rgb(59 130 246 / var(--tw-bg-opacity))" }
     const hide = { display: "none" }
 
     function removeUser(id) {
-        const newList = list.filter((l) => l.id !== id);
+        const newList = list.filter((user) => user._id !== id);
         setList(newList);
     }
 
-    function handleAdd() {
-        var cf = false;
-        var cc = false;
-
-        for (var i = 0; i < memberListFake.length; i++) {
-            if (memberListFake[i].name === userAdd) {
-                cf = true;
-                var user = memberListFake[i];
-                break;
+    async function handleAdd() {
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].username === userAdd) {
+                setError(false);
+                setMessage("User is selected")
+                return;
             }
         }
 
-        for (var j = 0; j < list.length; j++) {
-            if (list[j].name === userAdd) {
-                cc = true;
-                break;
+        try {
+            const userFound = (await axiosPrivate.get(`/api/group/findUser?keyword=${userAdd}`)).data;
+            if (userFound) {
+                // console.log(userFound);
+                setList(prev => [...prev, userFound]);
+                setUserAdd('');
+                setMessage("")
+                setError(false);
             }
-        }
-
-        if (cf && !cc) {
-            setList(prev => [...prev, user]);
-            setUserAdd('');
-            setMessage("")
-        }
-        else if (!cf && !cc) {
+            else {
+                setError(true)
+                setMessage("User not found")
+            }
+        } catch (error) {
             setError(true)
-            setMessage("User not found")
+            setMessage("Internal Server Error")
         }
-
     }
 
     const handlePreviewAvatar = (e) => {
         const file = e.target.files[0]
         file.preview = URL.createObjectURL(file)
         setGroupAvatar(file)
+    }
+
+    const handleCreateGroup = async () => {
+        console.log("Sending");
+        try {
+            const formData = new FormData();
+            formData.append('image', groupAvatar);
+            formData.append('groupName', groupName);
+            formData.append('members', JSON.stringify(list));
+
+            const response = await axiosPrivate.post('/api/group/create', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            console.log('Group created:', response.data);
+            closeModal(false);
+        } catch (error) {
+            console.error('Error creating group:', error);
+            setError(true);
+            setMessage("Failed");
+        }
     }
 
     useEffect(() => {
@@ -73,7 +87,7 @@ function EditGroupModal({ closeModal, status }) {
         // Background
         <div id="backmodal" className="w-screen h-screen bg-[rgba(39,38,38,0.5)] flex justify-center items-center fixed top-0 right-0 z-20 ">
             {/* Container */}
-            <div className={`w-[440px] ${list.length === 0 ? ' h-[410px] ' : ' h-[452px] '}  bg-white rounded-3xl flex-col z-20`}>
+            <div className={`w-[440px] pb-5 bg-white rounded-3xl flex-col z-20`}>
                 {/* Header */}
                 <div className="h-[60px] bg-blue-500 flex items-center justify-between rounded-t-3xl ">
                     <h3 className="text-white font-bold text-[18px] pl-4 ">{status} Group</h3>
@@ -86,10 +100,10 @@ function EditGroupModal({ closeModal, status }) {
 
                 {/* Input Image */}
                 <div className="h-[90px] m-4 bg-gray-100 flex items-center justify-center ">
-                    <FaImages size={64} color="" style={ groupAvatar ? hide : style } />
-                        {/* Preview Avatar */}
+                    <FaImages size={64} color="" style={groupAvatar ? hide : style} />
+                    {/* Preview Avatar */}
                     {groupAvatar && (
-                            <img src={groupAvatar.preview} alt="" className="w-16 h-16 rounded-full object-cover" />
+                        <img src={groupAvatar.preview} alt="" className="w-16 h-16 rounded-full object-cover" />
                     )}
                     <div className="pl-5">
                         <label
@@ -99,6 +113,7 @@ function EditGroupModal({ closeModal, status }) {
                         </label>
                         <input
                             className="hidden"
+                            name="file"
                             type="file"
                             id="inputAvatar"
                             onChange={handlePreviewAvatar}
@@ -138,27 +153,29 @@ function EditGroupModal({ closeModal, status }) {
                 </div>
 
                 {/* User list  */}
-                <div className= {` mt-36 mx-4 flex ${ list.length===0 ? 'justify-end ' : 'justify-between'} `}>
-                    <ul className="list-none">
+                <div className={` mt-36 mx-4 flex ${list.length === 0 ? 'justify-end ' : 'justify-between'} `}>
+                    <div className="flex flex-wrap max-w-[65%] h-auto">
                         {
-                            list.map((iconlist) => {
-                                return <div key={iconlist.id} className="inline-block mr-[20px] relative ">
-                                    <li > <img className="w-10 h-10 rounded-full object-cover" src={iconlist.icon} alt="" /> </li>
-                                    <button onClick={() => removeUser(iconlist.id)} className="top-0 left-7 rounded-full bg-red-600 font-bold text-[10px] text-white absolute w-3.5 h-3.5"> X </button>
-                                    <p className="font-medium text-black text-[14px] truncate max-w-[60px]" > {iconlist.name} </p>
+                            list.map((user) => {
+                                return <div key={user._id} className="inline-block w-[60px] mr-[5px] relative">
+                                    <div className="w-full flex justify-center">
+                                        <img className="w-10 h-10 rounded-full object-cover" src={user.image} alt="" />
+                                        <button onClick={() => removeUser(user._id)} className="top-0 left-10 rounded-full bg-red-600 font-bold text-[10px] text-white absolute w-3.5 h-3.5"> X </button>
+                                    </div>
+                                    <p className="font-medium text-black text-[14px] truncate max-w-[60px]">{user.username}</p>
                                 </div>
                             })
                         }
-                    </ul>
-                    {error && (
-                        <p className=" font-medium  text-red-600 bottom"> {message} </p>
-                    )}
+                    </div>
+                    {/* {error && ( */}
+                    <p className={`font-medium w-[35%] ${error ? 'text-red-600' : 'text-blue-600'} bottom`}> {message} </p>
+                    {/* )} */}
                 </div>
 
                 {/* Button submit */}
                 <div>
                     <button
-                        onClick={(e) => { }}
+                        onClick={() => { handleCreateGroup() }}
                         className={` h-10 w-[408px] ml-4 ${(error === false) && (list.length === 0) ? 'mt-12' : 'mt-6'}  text-white font-semibold bg-blue-500 hover:bg-blue-600`}>
                         {status === "Edit" ? "Update" : "Create Group"}
                     </button>
