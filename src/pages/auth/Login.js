@@ -28,7 +28,8 @@ function Login() {
             const fullname = response?.data?.fullname;
             const email = response?.data?.email;
             const streamToken = response?.data?.streamToken;
-            setAuth({ username: identifier, fullname, email, accessToken, streamToken });
+            const image = response?.data?.image;
+            setAuth({ username: identifier, fullname, email, accessToken, streamToken, image });
             setIdentifier('');
             setPassword('');
             setHasError(false);

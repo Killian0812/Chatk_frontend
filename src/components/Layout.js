@@ -9,7 +9,7 @@ import ChatPanel from "./chatpanel/ChatPanel.js";
 
 const Layout = () => {
   const { auth } = useAuth();
-  const { username, streamToken } = auth;
+  const { username, streamToken, image } = auth;
 
   const apiKey = 'j6cg6c93cpmj';
   const client = useCreateChatClient({
@@ -18,7 +18,7 @@ const Layout = () => {
     userData: {
       id: username,
       name: username,
-      image: `https://getstream.io/random_png/?name=${username}`,
+      image: image,
     },
   });
 

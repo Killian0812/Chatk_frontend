@@ -11,6 +11,7 @@ const useRefreshToken = () => {
         // console.log(response);
         setAuth({
             username: response.data.username,
+            image: response.data.image,
             fullname: response.data.fullname,
             email: response.data.email,
             accessToken: response.data.accessToken,  
