@@ -51,7 +51,7 @@ const CustomChannel = (props) => {
                   alt=""
                 />
                 {
-                  totalOnline === 2 && <span className='top-0 left-7 bg-green-400 absolute w-3.5 h-3.5 border-2 border-white dark:border-gray-800 rounded-full'
+                  totalOnline > 1 && <span className='top-0 left-7 bg-green-400 absolute w-3.5 h-3.5 border-2 border-white dark:border-gray-800 rounded-full'
                   ></span>
                 }
               </div>

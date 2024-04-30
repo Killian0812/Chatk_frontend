@@ -14,7 +14,7 @@ export default function Call() {
 
     useEffect(() => {
 
-        console.log(callId);
+        // console.log(callId);
 
         const apiKey = 'j6cg6c93cpmj';
         const token = streamToken;
@@ -24,7 +24,7 @@ export default function Call() {
         const user = {
             id: userId,
             name: username,
-            image: 'https://getstream.io/random_svg/?id=oliver&name=Killian081222',
+            image: `https://getstream.io/random_svg/?id=oliver&name=${auth.image || username}`,
         };
 
         const videoClient = new StreamVideoClient({ apiKey, user, token });
@@ -49,7 +49,7 @@ export default function Call() {
                 setCall(null);
             }
         };
-    }, [streamToken, username, callId]);
+    }, [streamToken, username, callId, auth.image]);
 
     if (error) {
         return <div>Error: {error.message}</div>;

@@ -5,9 +5,6 @@ import axios from "axios";
 
 function Login() {
 
-    // const clientID = '118692739109-em2kp06md5s62ee8533ugpq3usq5e684.apps.googleusercontent.com';
-    // const clientSecret = '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';
-
     const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');
 
