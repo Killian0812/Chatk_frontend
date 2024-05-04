@@ -23,7 +23,6 @@ const Layout = () => {
   });
 
   const path = useLocation().pathname;
-  console.log(path);
 
   if (!client)
     return <Loading />

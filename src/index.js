@@ -5,15 +5,22 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 
 import { AuthProvider } from './context/AuthProvider';
+import { CallStatusProvider } from './context/CallStatusProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <React.StrictMode>
     <AuthProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+
+      <CallStatusProvider>
+
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+
+      </CallStatusProvider>
+
     </AuthProvider>
   </React.StrictMode>
 );
