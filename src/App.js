@@ -12,6 +12,7 @@ import Groups from "./pages/home/Groups.js";
 import Layout from "./components/Layout.js";
 import Login from "./pages/auth/Login.js";
 import Register from "./pages/auth/Register.js";
+import Call from "./components/call/Call.js";
 export default function App() {
   function handleCallbackResponse(response) {
     const GoogleJWT = response.credential;
@@ -57,6 +58,9 @@ export default function App() {
             <Route path="/settings" element={<Settings />} />
             <Route path="/groups" element={<Groups />} />
           </Route>
+
+          <Route path="/call/:callId" element={<Call />} />
+
         </Route>
       </Route>
     </Routes>

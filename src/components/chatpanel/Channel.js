@@ -5,6 +5,7 @@ const CustomChannel = (props) => {
   const chatContext = useChatContext();
 
   const chatMembers = channel.state.members;
+
   const totalOnline = Object.values(chatMembers).reduce(
     (total, member) => total + !!member?.user?.online,
     0
@@ -12,7 +13,9 @@ const CustomChannel = (props) => {
 
   const otherMember = Object.values(chatMembers).filter(
     member => member?.user?.id !== chatContext.client.userID
-  )[0].user_id;
+  )[0];
+
+  console.log(otherMember)
 
   const totalUnreadMessages = channel.countUnread();
 
@@ -41,7 +44,7 @@ const CustomChannel = (props) => {
               <div className="relative">
                 <img
                   className="w-10 h-10 rounded-full object-cover "
-                  src={channel.data?.image}
+                  src={Object.keys(chatMembers).length === 2 ? otherMember?.user?.image : channel?.data?.image}
                   alt=""
                 />
                 {
@@ -51,7 +54,7 @@ const CustomChannel = (props) => {
               </div>
             </div>
             <div className="flex-1">
-              <div className="font-medium text-black opacity-90">{otherMember || 'Unnamed Channel'}</div>
+              <div className="font-medium text-black opacity-90">{otherMember.user_id || 'Unnamed Channel'}</div>
               <div className="text-xs text-gray-500">{lastMessage?.text?.slice(0, 30)}</div>
             </div >
             <div className="text-xs flex-[0.3] text-gray-500">
