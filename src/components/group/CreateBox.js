@@ -1,6 +1,6 @@
 //CreateBox.js
 import { useState } from "react";
-import CreateModal from "./CreateModal";
+import EditGroupModal from "./EditGroupModal";
 
 function CreateBox() {
     const [openModal, setOpenModal] = useState(false);
@@ -13,7 +13,7 @@ function CreateBox() {
                     Create Group
                 </button>
             </div>
-            {openModal && <CreateModal closeModal={setOpenModal} status={"Create"} />}
+            {openModal && <EditGroupModal closeModal={setOpenModal} status={"Create"} />}
 
         </div>
     )
