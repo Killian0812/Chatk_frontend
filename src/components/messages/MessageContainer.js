@@ -11,9 +11,9 @@ import Loading from '../Loading';
 
 init({ data });
 
-const ChannelHeader = ({ other, handleStartCall }) => {
+const ChannelHeader = ({ channelData, other, handleStartCall }) => {
 
-  console.log(other);
+  const isGroup = channelData?.isGroup;
 
   return (
     <div className='str-chat__header-livestream'>
@@ -23,11 +23,11 @@ const ChannelHeader = ({ other, handleStartCall }) => {
             alt="K"
             className="str-chat__avatar-image str-chat__avatar-image--loaded"
             data-testid="avatar-img"
-            src={other?.user?.image}
+            src={isGroup ? channelData?.image : other?.user?.image}
           />
         </div>
         <div className="str-chat__header-livestream-left str-chat__channel-header-end">
-          <p className="str-chat__header-livestream-left--title str-chat__channel-header-title">{other.user_id}</p>
+          <p className="str-chat__header-livestream-left--title str-chat__channel-header-title">{isGroup ? channelData?.name : other.user_id}</p>
         </div>
       </div>
       <button className="call-button" onClick={handleStartCall}>
@@ -71,8 +71,9 @@ const MessageContainer = () => {
           </div> :
           <>
             <Window>
-              <ChannelHeader other={other} handleStartCall={handleStartCall} />
-              <MessageList />
+              <ChannelHeader channelData={channel?.data} other={other} handleStartCall={handleStartCall} />
+              <MessageList closeReactionSelectorOnClick disableQuotedMessages
+                disableDateSeparator onlySenderCanEdit showUnreadNotificationAlways={false} />
               <MessageInput focus audioRecordingEnabled />
             </Window>
             <Thread />
