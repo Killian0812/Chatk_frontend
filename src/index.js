@@ -6,11 +6,14 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { AuthProvider } from './context/AuthProvider';
 import { CallStatusProvider } from './context/CallStatusProvider';
+import { ErrorBoundary } from "react-error-boundary";
+import Loading from './components/Loading';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
+  <ErrorBoundary FallbackComponent={<Loading />}>
     <AuthProvider>
 
       <CallStatusProvider>
@@ -22,7 +25,8 @@ root.render(
       </CallStatusProvider>
 
     </AuthProvider>
-  </React.StrictMode>
+  </ErrorBoundary>
+  // </React.StrictMode >
 );
 
 

@@ -5,9 +5,9 @@ import { IoIosVideocam } from 'react-icons/io';
 import { EmojiPicker } from 'stream-chat-react/emojis';
 import { init, SearchIndex } from 'emoji-mart';
 import data from '@emoji-mart/data';
-import { useEffect, useMemo, useState } from 'react';
-
+import { useEffect, useState } from 'react';
 import Loading from '../Loading';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 init({ data });
 
@@ -42,16 +42,15 @@ const MessageContainer = () => {
   const members = channel?.state?.members;
   const [loading, setLoading] = useState(true);
   const [other, setOther] = useState(null);
+  const axiosPrivate = useAxiosPrivate();
 
-  const mixedUserIds = useMemo(() => {
-    const id1 = client.userID;
-    const id2 = other?.user_id;
-    return id1 < id2 ? (id1 + id2) : (id2 + id1);
-  }, [client, other]);
-
-  const handleStartCall = () => {
-    // LATER: fetch the callId from server using mixedUserIds as identifier
-    window.open(`/call/${mixedUserIds}`, '_blank', 'width=1280,height=720');
+  const handleStartCall = async () => {
+    const callId = await axiosPrivate.get(`/api/call?cid=${channel.data.cid}`);
+    if (callId?.data?.cid)
+      window.open(`/call/${callId?.data?.cid}`, '_blank', 'width=1280,height=720');
+    else {
+      alert('Error');
+    }
   };
 
   useEffect(() => {
@@ -72,7 +71,7 @@ const MessageContainer = () => {
           <>
             <Window>
               <ChannelHeader channelData={channel?.data} other={other} handleStartCall={handleStartCall} />
-              <MessageList closeReactionSelectorOnClick disableQuotedMessages
+              <MessageList closeReactionSelectorOnClick
                 disableDateSeparator onlySenderCanEdit showUnreadNotificationAlways={false} />
               <MessageInput focus audioRecordingEnabled />
             </Window>
