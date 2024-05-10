@@ -5,12 +5,13 @@ import Loading from '../Loading';
 import { useParams } from 'react-router-dom';
 
 export default function Call() {
+
     const [client, setClient] = useState(null);
     const [call, setCall] = useState(null);
     const [error, setError] = useState(null);
     const { auth } = useAuth();
     const { username, streamToken } = auth;
-    const { callId } = useParams();
+    const { callType, callId } = useParams();
 
     useEffect(() => {
 
@@ -64,13 +65,13 @@ export default function Call() {
     return (
         <StreamVideo client={client}>
             <StreamCall call={call}>
-                <MyUILayout />
+                <MyUILayout callType={callType} />
             </StreamCall>
         </StreamVideo>
     );
 }
 
-export const MyUILayout = () => {
+export const MyUILayout = ({ callType }) => {
     const {
         useCallCallingState,
         useCameraState,
@@ -84,6 +85,10 @@ export const MyUILayout = () => {
 
     if (callingState !== CallingState.JOINED) {
         return <></>
+    }
+
+    if (callType === 'audio') {
+        cameraState.camera.disable();
     }
 
     if (!cameraState.hasBrowserPermission || !micState.hasBrowserPermission) {
