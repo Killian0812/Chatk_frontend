@@ -13,7 +13,7 @@ const Groups = () => {
   }
 
   return (
-    <div className="h-auto min-w-[350px] bg-[#F5F8FD]" >
+    <div className="h-auto min-w-[350px] bg-[var(--page-bg)]" >
       {/* Header */}
       <div>
         <h1 className='font-bold text-blue-500 text-2xl p-3'> Groups </h1>

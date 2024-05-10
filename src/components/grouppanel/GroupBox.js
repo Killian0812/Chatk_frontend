@@ -59,10 +59,10 @@ const GroupBox = ({ group, onDeleteGroup, onEditGroup }) => {
         <div className="relative">
             {/* Container */}
             <div onClick={goToChat}
-                className="mt-10 hover:bg-blue-50 w-[310px] h-[100px] rounded-lg shadow bg-white 
+                className="mt-10 hover:bg-[var(--group-hover-bg)] w-[310px] h-[100px] rounded-lg shadow  bg-[var(--group-bg)] 
             hover:cursor-pointer transform transition duration-500 ease-in-out hover:translate-y-[-3px]">
                 <div className="pt-[20px] px-[20px] flex items-center justify-between">
-                    <p className=" text-gray-700 text-[17px] font-bold truncate max-w-[100px]" > {group.groupName} </p>
+                    <p className=" text-[var(--group-text)] text-[17px] font-bold truncate max-w-[100px]" > {group.groupName} </p>
                     <button onClick={(e) => {
                         e.stopPropagation();
                         setOpenEdit(true)

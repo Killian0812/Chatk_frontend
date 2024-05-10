@@ -6,7 +6,7 @@ const Profile = () => {
   const { auth } = useAuth();
 
   return (
-    <div className="h-auto min-w-[350px] bg-[#F5F8FD]">
+    <div className="h-auto min-w-[350px] bg-[var(--page-bg)]">
       {/* Header */}
       <h1 className="p-3 text-2xl font-bold flex items-center text-blue-500 mb-0">
         Profile

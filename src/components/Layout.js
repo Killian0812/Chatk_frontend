@@ -74,13 +74,13 @@ const Layout = () => {
     return <Loading />
 
   return (
-    <div className="flex flex-row w-full h-full gap-0 bg-slate-50">
+    <div className="flex flex-row w-screen h-screen bg-[var(--navbar-bg)]">
       <NavBar />
       {/* content */}
-      <div className="w-full">
-        <div className="flex bg-white min-h-screen w-full border border-lg">
+      <div className="w-full bg-[var(--conversation-bg)]">
+        <div className="flex min-h-screen w-full border border-[var(--navbar-bg)] border-lg">
           <Chat client={client}>
-            <div className={path !== '/' ? 'hidden' : ''}>
+            <div className={`${path !== '/' ? 'hidden' : ''} w-[350px] bg-[var(--page-bg)]`}>
               <ChatPanel />
             </div>
             <Outlet />
