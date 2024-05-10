@@ -1,7 +1,7 @@
 import {
   Channel, MessageInput, MessageList, Thread, Window, useChatContext,
 } from 'stream-chat-react';
-import { IoIosVideocam } from 'react-icons/io';
+import { IoIosVideocam, IoIosCall } from 'react-icons/io';
 import { EmojiPicker } from 'stream-chat-react/emojis';
 import { init, SearchIndex } from 'emoji-mart';
 import data from '@emoji-mart/data';
@@ -32,9 +32,14 @@ const ChannelHeader = ({ channelData, other, handleStartCall }) => {
           <p className="str-chat__header-livestream-left--title str-chat__channel-header-title">{isGroup ? channelData?.name : other.user_id}</p>
         </div>
       </div>
-      <button className="call-button" onClick={handleStartCall}>
-        <IoIosVideocam size={30} color='#007bff' />
-      </button>
+      <div className='flex flex-row space-x-3'>
+        <button className="call-button" onClick={() => handleStartCall('audio')}>
+          <IoIosCall size={30} color='#007bff' />
+        </button>
+        <button className="call-button" onClick={() => handleStartCall('video')}>
+          <IoIosVideocam size={30} color='#007bff' />
+        </button>
+      </div>
     </div>
   );
 };
@@ -49,17 +54,18 @@ const MessageContainer = () => {
   const [other, setOther] = useState(null);
   const axiosPrivate = useAxiosPrivate();
 
-  const handleStartCall = async () => {
+  const handleStartCall = async (callType) => {
     const callId = await axiosPrivate.get(`/api/call?cid=${channel?.data?.cid}`);
     if (callId?.data?.cid) {
       socket.emit('calling', {
         image: auth.image,
+        callType: callType,
         isGroup: channel?.data?.isGroup,
         name: channel?.data?.name,
         memberIds: JSON.stringify(memberIds),
         callId: callId?.data?.cid
       });
-      window.open(`/call/${callId?.data?.cid}`, '_blank', 'width=1280,height=720');
+      window.open(`/call/${callType}/${callId?.data?.cid}`, '_blank', 'width=1280,height=720');
     }
     else {
       alert('Error');
