@@ -5,7 +5,7 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 
 import { AuthProvider } from './context/AuthProvider';
-import { CallStatusProvider } from './context/CallStatusProvider';
+import { SocketProvider } from './context/SocketProvider';
 import { ErrorBoundary } from "react-error-boundary";
 import Loading from './components/Loading';
 
@@ -13,16 +13,16 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   // <React.StrictMode>
-  <ErrorBoundary FallbackComponent={<Loading />}>
+  <ErrorBoundary fallback={<Loading />}>
     <AuthProvider>
 
-      <CallStatusProvider>
+      <SocketProvider>
 
         <BrowserRouter>
           <App />
         </BrowserRouter>
 
-      </CallStatusProvider>
+      </SocketProvider>
 
     </AuthProvider>
   </ErrorBoundary>
