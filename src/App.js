@@ -59,7 +59,7 @@ export default function App() {
             <Route path="/groups" element={<Groups />} />
           </Route>
 
-          <Route path="/call/:callId" element={<Call />} />
+          <Route path="/call/:callType/:callId/" element={<Call />} />
 
         </Route>
       </Route>
