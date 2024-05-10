@@ -8,6 +8,8 @@ import data from '@emoji-mart/data';
 import { useEffect, useState } from 'react';
 import Loading from '../Loading';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
+import useSocket from '../../hooks/useSocket';
+import useAuth from '../../hooks/useAuth';
 
 init({ data });
 
@@ -39,15 +41,26 @@ const ChannelHeader = ({ channelData, other, handleStartCall }) => {
 
 const MessageContainer = () => {
   const { channel, client } = useChatContext();
+  const { auth } = useAuth();
+  const { socket } = useSocket();
   const members = channel?.state?.members;
+  const memberIds = Object.keys(members || []);
   const [loading, setLoading] = useState(true);
   const [other, setOther] = useState(null);
   const axiosPrivate = useAxiosPrivate();
 
   const handleStartCall = async () => {
-    const callId = await axiosPrivate.get(`/api/call?cid=${channel.data.cid}`);
-    if (callId?.data?.cid)
+    const callId = await axiosPrivate.get(`/api/call?cid=${channel?.data?.cid}`);
+    if (callId?.data?.cid) {
+      socket.emit('calling', {
+        image: auth.image,
+        isGroup: channel?.data?.isGroup,
+        name: channel?.data?.name,
+        memberIds: JSON.stringify(memberIds),
+        callId: callId?.data?.cid
+      });
       window.open(`/call/${callId?.data?.cid}`, '_blank', 'width=1280,height=720');
+    }
     else {
       alert('Error');
     }
