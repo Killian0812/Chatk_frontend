@@ -14,7 +14,7 @@ const RingingCall = ({ inComingCall }) => {
   const { setInComingCall } = useSocket();
 
   const acceptCall = () => {
-    window.open(`/call/${inComingCall.callId}`, '_blank', 'width=1280,height=720');
+    window.open(`/call/${inComingCall.callType}/${inComingCall.callId}`, '_blank', 'width=1280,height=720');
     setInComingCall(null);
   };
 
@@ -24,11 +24,17 @@ const RingingCall = ({ inComingCall }) => {
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <audio autoPlay loop>
+        <source src={`${process.env.PUBLIC_URL}/phone_ring.mp3`} type="audio/mp3" />
+      </audio>
       <div className="bg-white rounded-lg p-[50px] flex flex-col items-center">
         <img src={inComingCall.image} alt="Caller" className="rounded-full w-[120px] h-[120px] mb-4" />
-        <div className="mb-4">
+        <div className="mb-4 text-center">
           <p className="font-bold text-black">
             {`${inComingCall.caller} ${inComingCall.isGroup ? ('started a call in ' + inComingCall.name) : 'is calling you'}`}
+          </p>
+          <p className="font-bold text-gray-400">
+            {`${inComingCall.callType === 'audio' ? 'Audio call' : 'Video call'}`}
           </p>
         </div>
         <div className="flex w-[200px] justify-between">

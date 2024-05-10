@@ -14,7 +14,7 @@ const CustomChannel = (props) => {
     0
   );
 
-  console.log(totalOnline);
+  console.log(`${channel.cid}: ${totalOnline}`);
 
   const otherMember = Object.values(chatMembers).filter(
     member => member?.user?.id !== chatContext.client.userID
