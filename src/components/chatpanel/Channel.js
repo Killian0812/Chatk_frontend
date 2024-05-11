@@ -5,16 +5,12 @@ const CustomChannel = (props) => {
   const chatContext = useChatContext();
 
   const chatMembers = channel.state.members;
-
   const isGroup = channel.data?.isGroup;
-  const totalMember = channel.data?.member_count;
 
   const totalOnline = Object.values(chatMembers).reduce(
     (total, member) => total + !!member?.user?.online,
     0
   );
-
-  console.log(`${channel.cid}: ${totalOnline}`);
 
   const otherMember = Object.values(chatMembers).filter(
     member => member?.user?.id !== chatContext.client.userID
@@ -60,11 +56,11 @@ const CustomChannel = (props) => {
             </div>
             <div className="flex-1">
               {
-                isGroup && <span className="text-sm text-gray-500">{`Total members: ${totalMember}`}</span>
+                isGroup && <span className="text-sm text-gray-500">{`Online: ${totalOnline}`}</span>
               }
               <div className="font-medium text-black opacity-90">{(isGroup ? channel.data.name : otherMember.user_id) || 'Unnamed Channel'}
               </div>
-              <div className="text-xs text-gray-500">{lastMessage?.text?.slice(0, 30)}</div>
+              <div className="text-xs truncate max-w-[180px] text-gray-500">{lastMessage?.text}</div>
             </div >
             <div className="text-xs flex-[0.3] text-gray-500">
               {
