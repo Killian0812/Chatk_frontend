@@ -4,15 +4,19 @@ import { jwtDecode } from "jwt-decode";
 
 import PersistLogin from "./components/persistlogin/PersistLogin.js";
 import Authenticate from "./components/authenticate/Authenticate.js";
+
 import NotFound from "./pages/home/NotFound.js";
 import Settings from "./pages/home/Settings.js";
 import Friends from "./pages/home/Friends.js";
 import Profile from "./pages/home/Profile.js";
 import Groups from "./pages/home/Groups.js";
-import Layout from "./components/Layout.js";
-import Login from "./pages/auth/Login.js";
 import Register from "./pages/auth/Register.js";
+import Login from "./pages/auth/Login.js";
+
+import { UserDataProvider } from "./context/UserDataProvider.js"
+import Layout from "./components/Layout.js";
 import Call from "./components/call/Call.js";
+
 export default function App() {
   function handleCallbackResponse(response) {
     const GoogleJWT = response.credential;
@@ -38,7 +42,8 @@ export default function App() {
       <Route element={<PersistLogin />}>
         {/* require authentication  */}
         <Route element={<Authenticate />}>
-          <Route path="/" element={<Layout />}>
+          {/* wrap Layout in a redux-like global state provider */}
+          <Route path="/" element={<UserDataProvider><Layout /></UserDataProvider>}>
             {/* Nested routes */}
 
             <Route
