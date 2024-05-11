@@ -1,9 +1,17 @@
-//Group.js
-import React from 'react'
-import CreateBox from '../../components/group/CreateBox';
-import GroupList from '../../components/group/GroupList';
+import CreateBox from '../../components/grouppanel/CreateBox';
+import GroupList from '../../components/grouppanel/GroupList';
+import useUserData from '../../hooks/useUserData';
 
 const Groups = () => {
+
+  const { listGroup, setListGroup } = useUserData();
+
+  const handleCreateGroup = async (newGroup) => {
+    setListGroup((prev) => {
+      return [...prev, newGroup];
+    });
+  }
+
   return (
     <div className="h-auto min-w-[350px] bg-[#F5F8FD]" >
       {/* Header */}
@@ -13,10 +21,10 @@ const Groups = () => {
 
       {/* Create Button */}
       <div className='p-3'>
-        <CreateBox />
+        <CreateBox onCreateGroup={handleCreateGroup} />
 
         <div className='pt-6'>
-          <GroupList />
+          <GroupList listGroup={listGroup} setListGroup={setListGroup} />
         </div>
 
       </div>
