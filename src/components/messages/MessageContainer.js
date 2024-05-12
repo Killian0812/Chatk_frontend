@@ -5,17 +5,23 @@ import { IoIosVideocam, IoIosCall } from 'react-icons/io';
 import { EmojiPicker } from 'stream-chat-react/emojis';
 import { init, SearchIndex } from 'emoji-mart';
 import data from '@emoji-mart/data';
-import { useEffect, useState } from 'react';
-import Loading from '../Loading';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import useSocket from '../../hooks/useSocket';
 import useAuth from '../../hooks/useAuth';
 
 init({ data });
 
-const ChannelHeader = ({ channelData, other, handleStartCall }) => {
+const ChannelHeader = ({ channelData, members, memberIds, handleStartCall }) => {
+
+  const { client } = useChatContext();
 
   const isGroup = channelData?.isGroup;
+
+  const finalMemberIds = memberIds?.length ? memberIds : channelData?.members;
+
+  const index = finalMemberIds.findIndex(id => id !== client.userID);
+
+  const otherUser = members[Object.keys(members)[index]];
 
   return (
     <div className='str-chat__header-livestream'>
@@ -25,11 +31,12 @@ const ChannelHeader = ({ channelData, other, handleStartCall }) => {
             alt="K"
             className="str-chat__avatar-image str-chat__avatar-image--loaded"
             data-testid="avatar-img"
-            src={isGroup ? channelData?.image : other?.user?.image}
+            src={isGroup ? channelData?.image :
+              (otherUser?.user?.image || `https://getstream.io/random_svg/?id=oliver&name=${finalMemberIds[index]}`)}
           />
         </div>
         <div className="str-chat__header-livestream-left str-chat__channel-header-end">
-          <p className="str-chat__header-livestream-left--title str-chat__channel-header-title">{isGroup ? channelData?.name : other.user_id}</p>
+          <p className="str-chat__header-livestream-left--title str-chat__channel-header-title">{isGroup ? channelData?.name : finalMemberIds[index]}</p>
         </div>
       </div>
       <div className='flex flex-row space-x-3'>
@@ -45,13 +52,11 @@ const ChannelHeader = ({ channelData, other, handleStartCall }) => {
 };
 
 const MessageContainer = () => {
-  const { channel, client } = useChatContext();
+  const { channel } = useChatContext();
   const { auth } = useAuth();
   const { socket } = useSocket();
   const members = channel?.state?.members;
   const memberIds = Object.keys(members || []);
-  const [loading, setLoading] = useState(true);
-  const [other, setOther] = useState(null);
   const axiosPrivate = useAxiosPrivate();
 
   const handleStartCall = async (callType) => {
@@ -72,33 +77,16 @@ const MessageContainer = () => {
     }
   };
 
-  useEffect(() => {
-    if (members) {
-      const otherMember = Object.values(members).find(member => member.user_id !== client.userID);
-      setOther(otherMember);
-      setLoading(false);
-    }
-  }, [members, client.userID]);
-
   return (
-    <>
-      <Channel EmojiPicker={EmojiPicker} emojiSearchIndex={SearchIndex} >
-        {loading ?
-          <div className='w-full'>
-            <Loading />
-          </div> :
-          <>
-            <Window>
-              <ChannelHeader channelData={channel?.data} other={other} handleStartCall={handleStartCall} />
-              <MessageList closeReactionSelectorOnClick
-                disableDateSeparator onlySenderCanEdit showUnreadNotificationAlways={false} />
-              <MessageInput focus audioRecordingEnabled />
-            </Window>
-            <Thread />
-          </>
-        }
-      </Channel>
-    </>
+    <Channel EmojiPicker={EmojiPicker} emojiSearchIndex={SearchIndex} >
+      <Window>
+        <ChannelHeader channelData={channel?.data} members={members} memberIds={memberIds} handleStartCall={handleStartCall} />
+        <MessageList closeReactionSelectorOnClick
+          disableDateSeparator onlySenderCanEdit showUnreadNotificationAlways={false} />
+        <MessageInput focus audioRecordingEnabled />
+      </Window>
+      <Thread />
+    </Channel>
   );
 };
 

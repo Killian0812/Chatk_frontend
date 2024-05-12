@@ -35,6 +35,7 @@ function GroupModal({ toggleModal, status, editGroup, onCreateGroup, onEditGroup
         }
 
         try {
+            console.log(userAdd);
             const userFound = (await axiosPrivate.get(`/api/group/findUser?keyword=${userAdd}`)).data;
             if (userFound) {
                 if (userFound.username === auth.username) {
@@ -54,7 +55,7 @@ function GroupModal({ toggleModal, status, editGroup, onCreateGroup, onEditGroup
             }
         } catch (error) {
             setError(true)
-            setMessage("Internal Server Error")
+            setMessage("Server Error")
         }
     }
 
@@ -182,7 +183,8 @@ function GroupModal({ toggleModal, status, editGroup, onCreateGroup, onEditGroup
                     <button
                         type="submit"
                         onClick={handleAdd}
-                        className={` absolute right-0 w-16 h-10 mt-2 ${userAdd === '' ? 'bg-gray-500 hover:bg-gray-600 ' : '  bg-blue-500 hover:bg-blue-600'} duration-300 text-white font-semibold rounded-md  `}>
+                        disabled={!userAdd}
+                        className={`absolute right-0 w-16 h-10 mt-2 ${userAdd === '' ? 'bg-gray-500 hover:bg-gray-600 hover:cursor-not-allowed' : '  bg-blue-500 hover:bg-blue-600'} duration-300 text-white font-semibold rounded-md  `}>
                         Add
                     </button>
                 </div>

@@ -160,6 +160,10 @@ body {
     color: #333;
 }
 
+.str-chat__message-attachment__voice-recording-widget__title {
+    display: none;
+}
+
 .call-button {
     border-radius: 50%;
     width: 50px;
