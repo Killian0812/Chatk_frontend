@@ -1,32 +1,32 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Tippy from "@tippyjs/react";
+import useAuth from "../../hooks/useAuth";
 
 const USERNAME_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%_?]).{6,24}$/; // 
 const EMAIL_REGEX = /^([^\s@]+@[^\s@]+\.[^\s@]+)$/;
 
 function UsernameTooltip({ status, hasText }) {
-    if (hasText === "") return 'Username must contain 4 to 24 characters and start with a letter'
-    return `Username must contain 4 to 24 characters and start with a letter ${status ? '✔️' : '❌'} `
-
+    return `Username must contain 4 to 24 characters and start with a letter ${hasText === "" ? "" : (status ? '✅' : '❌')} `
 }
 function PasswordTooltip({ status, hasText }) {
-    if (hasText === "") return `Password must contain 6 to 24 characters, must include uppercase and lowercase letters , a number, a special character`
-    return `Password must contain 8 to 24 characters, must include uppercase and lowercase letters , a number, a special character ${status ? '✔️' : '❌'} `
+    return `Password must contain 6 to 24 characters, must include uppercase and lowercase letters ,
+     a number, a special character ${hasText === "" ? "" : (status ? '✅' : '❌')}`
 }
 function EmailTooltip({ status, hasText }) {
-    if (hasText === "") return `Must be a valid email address`
-    return `Must be a valid email address ${status ? '✔️' : '❌'} `
+    return `Must be a valid email address ${hasText === "" ? "" : (status ? '✅' : '❌')}`
 }
 function PasswordCfTooltip({ status, hasText }) {
-    if (hasText === "") return `Make sure your confirm password matches the one entered above`
-    return `Make sure your confirm password matches the one entered above ${status ? '✔️' : '❌'} `
+    return `Make sure your confirm password matches the one entered above ${hasText === "" ? "" : (status ? '✅' : '❌')}`
 }
 
 
 function Register() {
+
+    const { setAuth } = useAuth();
+    const navigate = useNavigate();
 
     const [username, setUsername] = useState('');
     const [validName, setValidName] = useState(false);
@@ -63,36 +63,40 @@ function Register() {
         console.log(username, email, password, cfPassword);
 
         // use regex to check validation
-        if(!validName) {
+        if (!validName) {
             setHasError(true);
             setMessage("Not a valid username")
             return;
         }
-        else if(!validEmail) {
+        else if (!validEmail) {
             setHasError(true);
             setMessage("Not a valid email")
             return;
         }
-        else if(!validPwd) {
+        else if (!validPwd) {
             setHasError(true);
             setMessage("Not a valid password")
             return;
         }
-        else if(!validMatch) {
+        else if (!validMatch) {
             setHasError(true);
             setMessage("Confirm password doesn't match")
             return;
         }
-            
+
         // if all validation passed
         try {
-            await axios.post('/api/register', { username, password, email });
+            const response = await axios.post('/api/register', { username, password, email });
+            const accessToken = response?.data?.accessToken;
+            const streamToken = response?.data?.streamToken;
+            const image = response?.data?.image;
+            setAuth({ username: username, email, accessToken, streamToken, image });
             setUsername('');
             setEmail('');
             setPassword('');
             setCfPassword('');
             setHasError(false);
-            setMessage('Success! Please go to login page.');
+            navigate('/', { replace: true });
         } catch (error) {
             setHasError(true);
             if (!error?.response) {
