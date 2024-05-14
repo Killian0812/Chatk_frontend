@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from "axios";
 import Tippy from "@tippyjs/react";
+import TeamIntro from "../../components/TeamIntro";
 
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%_?]).{6,24}$/;
 
 function PasswordTooltip({ status, hasText }) {
-    return `Password must contain 6 to 24 characters, must include uppercase and lowercase letters ,
+    return `Password must contain 6 to 24 characters, must include uppercase and lowercase letters,
      a number, a special character ${hasText === "" ? "" : (status ? '✅' : '❌')}`
 }
 function PasswordCfTooltip({ status, hasText }) {
@@ -80,7 +81,7 @@ function Recover() {
         <div className="h-screen w-screen flex bg-[var(--login-right-bg)]">
             {/* left theme */}
             <div className="h-full w-1/2 bg-gradient-to-r from-[--login-start-gradient] to-[--login-end-gradient] flex-auto">
-
+                <TeamIntro />
             </div>
             {/* right theme */}
             <div className="h-full w-1/2 flex items-center justify-center">
