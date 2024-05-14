@@ -7,7 +7,6 @@ import Authenticate from "./components/authenticate/Authenticate.js";
 
 import NotFound from "./pages/home/NotFound.js";
 import Settings from "./pages/home/Settings.js";
-import Friends from "./pages/home/Friends.js";
 import Profile from "./pages/home/Profile.js";
 import Groups from "./pages/home/Groups.js";
 import Register from "./pages/auth/Register.js";
@@ -46,20 +45,7 @@ export default function App() {
           <Route path="/" element={<UserDataProvider><Layout /></UserDataProvider>}>
             {/* Nested routes */}
 
-            <Route
-              path="/profile"
-              element={
-                <Profile
-                  info={{
-                    icon: "https://media.gettyimages.com/id/545945904/photo/topshot-portugals-forward-cristiano-ronaldo-reacts-as-portugal-beats-france-1-0-to-clinch-the.jpg?s=612x612&w=0&k=20&c=I3NgDyB0NLaqZbWchp08_jRq7Ozbyc426bZ1hWLk6vE=",
-                    name: "Penaldu",
-                    address: "Korea",
-                  }}
-                />
-              }
-            />
-
-            <Route path="/friends" element={<Friends />} />
+            <Route path="/profile"element={<Profile/>}/>
             <Route path="/settings" element={<Settings />} />
             <Route path="/groups" element={<Groups />} />
           </Route>

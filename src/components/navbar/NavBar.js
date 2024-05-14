@@ -64,7 +64,7 @@ const NavBar = () => {
       </ul>
 
       {/* Logout */}
-      <li onClick={logoutConfirm} className='mt-[90px] rounded-[50%] w-[70px] h-[70px] text-gray-800 flex items-center justify-center hover:bg-[#F1F4F9]'>
+      <li onClick={logoutConfirm} className='mt-[155px] rounded-[50%] w-[70px] h-[70px] text-gray-800 flex items-center justify-center hover:bg-[#F1F4F9]'>
         <div className="w-full flex justify-center">
           <span className="p-2 flex flex-row">
             <BsPower className="w-6 h-6 fill-gray-700" />

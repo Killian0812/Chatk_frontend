@@ -1,76 +1,108 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useAuth from "../../hooks/useAuth";
+import Tippy from "@tippyjs/react";
+
+const FULLNAME_REGEX = /^[a-zA-Z\s]+$/;
+const EMAIL_REGEX = /^([^\s@]+@[^\s@]+\.[^\s@]+)$/;
+
+function FullnameTooltip({ status, hasText }) {
+  return `Fullname must not contain special characters ${hasText === "" ? "" : (status ? '✅' : '❌')} `
+}
+function EmailTooltip({ status, hasText }) {
+  return `Must be a valid email address ${hasText === "" ? "" : (status ? '✅' : '❌')}`
+}
 
 const GeneralInfoForm = () => {
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [contact, setContact] = useState("");
+  const { auth, setAuth } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
+
+  const [fullname, setFullname] = useState(auth.fullname || "");
+  const [validFullname, setValidFullname] = useState(false);
+
+  const [email, setEmail] = useState(auth.email || "");
+  const [validEmail, setValidEmail] = useState(false);
+
   const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(false);
   const [avatar, setAvatar] = useState(null);
-  const [preview, setPreview]=useState(null);
-  const oldAvatar =
-    "https://sportstime247.com/wp-content/uploads/2019/09/cristiano-ronaldo-cry.jpg";
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const [loading, setLoading] = useState(false);
 
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append("avatar", avatar); // Append the uploaded avatar to form data
-  //     formData.append("fullName", fullName);
-  //     formData.append("email", email);
-  //     formData.append("contact", contact);
+  useEffect(() => {
+    setValidFullname(FULLNAME_REGEX.test(fullname));
+  }, [fullname])
 
-  //     const response = await axios.post("/api/update-general-info", formData, {
-  //       headers: {
-  //         "Content-Type": "multipart/form-data",
-  //       },
-  //     });
-  //     setMessage(response.data.message);
-  //     setError("");
-  //     setFullName("");
-  //     setEmail("");
-  //     setContact("");
-  //     setAvatar(null); // Reset avatar state after successful upload
-  //   } catch (error) {
-  //     setMessage("");
-  //     setError(error.response.data.message);
-  //   }
-   };
-  
+  useEffect(() => {
+    setValidEmail(EMAIL_REGEX.test(email))
+  }, [email])
+
+  const handleSubmit = async () => {
+
+    try {
+      const formData = new FormData();
+      formData.append('image', avatar);
+      formData.append('fullname', fullname);
+      formData.append('email', email);
+
+      const response = await axiosPrivate.post('/api/user/edit', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      setAuth({
+        ...auth, image: response.data.image, fullname: response.data.fullname, email: response.data.email
+      })
+      setAvatar(null);
+      setMessage("Updated profile");
+      setError(false);
+    } catch (error) {
+      setError(true);
+      setMessage(error.response.data);
+    }
+    setLoading(false);
+  };
+
 
   return (
     <div className="h-auto w-auto">
       <div className="h-full w-full flex items-center justify-center">
         <div className="h-full w-full border-gray-300 shadow-xl flex flex-col gap-2">
-          <form onSubmit={handleSubmit} className="mt-2 flex flex-col gap-8">
+          <div className="mt-2 flex flex-col gap-8">
             {/* Avatar */}
             <div className="mx-5 relative flex items-center bg-slate-100 p-2 gap-2">
               {/* Uploaded data */}
               {avatar ? (
                 <img
-                  src={preview}
+                  src={avatar?.preview}
                   alt="Avatar"
                   className="rounded-full w-20 h-20 object-cover"
                 />
               ) : (
                 <img
-                  src={oldAvatar}
+                  src={auth.image}
                   alt="Avatar"
                   className="rounded-full w-20 h-20 object-cover"
                 />
               )}
-              
+
+              <label
+                htmlFor="inputAvatar"
+                className="cursor-pointer rounded border mr-[40px] px-[12px] py-[6px] bg-white text-black hover:border-gray-500">
+                Upload Avatar
+              </label>
               <input
+                className="hidden"
+                name="file"
                 type="file"
-                id="avatar"
                 accept="image/*"
+                id="inputAvatar"
                 onChange={(e) => {
-                  const tmp = URL.createObjectURL(e.target.files[0]);
-                  setPreview(tmp);
-                }}
-              />
-              
+                  const file = e.target.files[0]
+                  file.preview = URL.createObjectURL(file)
+                  setAvatar(file)
+                }}></input>
+
             </div>
             {/* Full Name */}
             <div className="ml-5 mr-5 relative">
@@ -80,13 +112,20 @@ const GeneralInfoForm = () => {
               >
                 Full Name
               </label>
-              <input
-                type="text"
-                id="fullName"
-                className="outline-0 absolute top-2 z-10 rounded-sm py-1.5 pl-3 w-full bg-white text-gray-900 border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-              />
+              <Tippy
+                hideOnClick="false"
+                placement="right"
+                trigger="focus"
+                content={<FullnameTooltip status={validFullname} hasText={fullname} />}
+              >
+                <input
+                  type="text"
+                  id="fullName"
+                  className="outline-0 absolute top-2 z-10 rounded-sm py-1.5 pl-3 w-full bg-white text-gray-900 border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
+                  value={fullname}
+                  onChange={(e) => setFullname(e.target.value)}
+                />
+              </Tippy>
             </div>
 
             <div className="mt-5 ml-5 mr-5 relative">
@@ -96,46 +135,41 @@ const GeneralInfoForm = () => {
               >
                 Email
               </label>
-              <input
-                type="email"
-                id="email"
-                className="outline-0 absolute top-2 z-10 rounded-sm py-1.5 pl-3 w-full bg-white text-gray-900 border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+              <Tippy
+                hideOnClick="false"
+                placement="right"
+                trigger="focus"
+                content={<EmailTooltip status={validEmail} hasText={email} />}>
+                <input
+                  type="email"
+                  id="email"
+                  className="outline-0 absolute top-2 z-10 rounded-sm py-1.5 pl-3 w-full bg-white text-gray-900 border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </Tippy>
             </div>
 
-            <div className="mt-5 ml-5 mr-5 relative">
-              <label
-                htmlFor="contact"
-                className="absolute px-1 font-semibold bg-white left-3 z-20 text-blue-600 text-xs"
-              >
-                Contact
-              </label>
-              <input
-                type="text"
-                id="contact"
-                className="outline-0 absolute top-2 z-10 rounded-sm py-1.5 pl-3 w-full bg-white text-gray-900 border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
-                value={contact}
-                onChange={(e) => setContact(e.target.value)}
-              />
-            </div>
+            <div className={`${error ? 'text-red-600' : 'text-green-600'} mt-5 text-center relative`}>{message}</div>
 
-            <div className="flex flex-col justify-center mb-5 mt-8 mx-3">
+            <div className="flex flex-col justify-center mb-7 mt-[-20px] mx-3 relative">
               <button
-                type="submit"
-                className="inline-block w-full h-10 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 duration-300"
+                disabled={loading || !validEmail || !validFullname || (fullname === auth.fullname && email === auth.email)}
+                onClick={() => {
+                  setLoading(true);
+                  handleSubmit();
+                }}
+                className="w-full h-10 bg-blue-500 text-white font-semibold rounded-md
+                 hover:bg-blue-600 duration-300 flex justify-center items-center 
+                 disabled:bg-slate-500 disabled:hover:cursor-not-allowed"
               >
-                Update Info
+                {
+                  loading ? <img src="/loading.png" className="w-9 h-9" alt=""></img> :
+                    "Update information"
+                }
               </button>
-              {error && (
-                <div className="text-red-600 mt-0 text-center">{error}</div>
-              )}
-              {message && (
-                <div className="text-green-600 mt-0 text-center">{message}</div>
-              )}
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>

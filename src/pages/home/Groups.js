@@ -16,7 +16,7 @@ const Groups = () => {
     <div className="h-auto min-w-[350px] bg-[#F5F8FD]" >
       {/* Header */}
       <div>
-        <h1 className='font-medium text-blue-500 text-2xl p-3'> Groups </h1>
+        <h1 className='font-bold text-blue-500 text-2xl p-3'> Groups </h1>
       </div>
 
       {/* Create Button */}
