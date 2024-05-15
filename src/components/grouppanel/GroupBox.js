@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { IoTrashSharp } from "react-icons/io5";
 import { FaRegEdit } from "react-icons/fa";
-import { IoMdChatboxes } from "react-icons/io";
 import { confirmAlert } from 'react-confirm-alert';
 import { useChatContext } from "stream-chat-react";
 
@@ -59,11 +58,15 @@ const GroupBox = ({ group, onDeleteGroup, onEditGroup }) => {
     return (
         <div className="relative">
             {/* Container */}
-            <div className="mt-10 hover:bg-blue-50 w-[310px] h-[100px] rounded-lg shadow bg-white 
+            <div onClick={goToChat}
+                className="mt-10 hover:bg-blue-50 w-[310px] h-[100px] rounded-lg shadow bg-white 
             hover:cursor-pointer transform transition duration-500 ease-in-out hover:translate-y-[-3px]">
                 <div className="pt-[20px] px-[20px] flex items-center justify-between">
                     <p className=" text-gray-700 text-[17px] font-bold truncate max-w-[100px]" > {group.groupName} </p>
-                    <button onClick={goToChat}  > <IoMdChatboxes color="#356afc" size={25} /> </button>
+                    <button onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenEdit(true)
+                    }}  > <FaRegEdit color="#356afc" size={20} /> </button>
                 </div>
 
                 <div className="h-[40px] pt-[20px] px-[20px] flex items-center justify-between">
@@ -85,8 +88,10 @@ const GroupBox = ({ group, onDeleteGroup, onEditGroup }) => {
                         }
                     </div>
                     <div className="space-x-4">
-                        <button onClick={() => { setOpenEdit(true) }}  > <FaRegEdit color="#356afc" size={20} /> </button>
-                        <button onClick={deleteConfirm} className="mr-0.5"> <IoTrashSharp color="#ff6666" size={20} /> </button>
+                        <button onClick={(e) => {
+                            e.stopPropagation();
+                            deleteConfirm()
+                        }} className="mr-0.5"> <IoTrashSharp color="#ff6666" size={20} /> </button>
                     </div>
                 </div>
                 {/* Group Image */}

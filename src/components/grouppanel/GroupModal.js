@@ -80,13 +80,13 @@ function GroupModal({ toggleModal, status, editGroup, onCreateGroup, onEditGroup
             });
 
             onCreateGroup(response.data);
-            setLoading(false);
             toggleModal(false);
         } catch (error) {
             console.error('Error creating group:', error);
             setError(true);
             setMessage("Failed");
         }
+        setLoading(false);
     }
 
     const handleEditGroup = async () => {
