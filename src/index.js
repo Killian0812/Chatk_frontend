@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { AuthProvider } from './context/AuthProvider';
 import { SocketProvider } from './context/SocketProvider';
+import { ThemeProvider } from './context/ThemeProvider';
 import { ErrorBoundary } from "react-error-boundary";
 import Loading from './components/Loading';
 
@@ -18,9 +19,13 @@ root.render(
 
       <SocketProvider>
 
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <ThemeProvider>
+
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+
+        </ThemeProvider>
 
       </SocketProvider>
 

@@ -12,37 +12,44 @@ import Login from "./pages/auth/Login.js";
 import Forgot from "./pages/auth/Forgot.js";
 
 import { UserDataProvider } from "./context/UserDataProvider.js"
+import useTheme from "./hooks/useTheme.js"
 import Layout from "./components/Layout.js";
 import Call from "./components/call/Call.js";
 import Recover from "./pages/auth/Recover.js";
 
 export default function App() {
 
+  const { theme } = useTheme();
+
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/forgot" element={<Forgot />} />
-      <Route path="/recover" element={<Recover />} />
-      <Route path="/*" element={<NotFound />} />
+    <div id="theme" className={`${theme} w-screen h-screen`}>
 
-      {/* persist user login */}
-      <Route element={<PersistLogin />}>
-        {/* require authentication  */}
-        <Route element={<Authenticate />}>
-          {/* wrap Layout in a redux-like global state provider */}
-          <Route path="/" element={<UserDataProvider><Layout /></UserDataProvider>}>
-            {/* Nested routes */}
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot" element={<Forgot />} />
+        <Route path="/recover" element={<Recover />} />
+        <Route path="/*" element={<NotFound />} />
 
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/groups" element={<Groups />} />
+        {/* persist user login */}
+        <Route element={<PersistLogin />}>
+          {/* require authentication  */}
+          <Route element={<Authenticate />}>
+            {/* wrap Layout in a redux-like global state provider */}
+            <Route path="/" element={<UserDataProvider><Layout /></UserDataProvider>}>
+              {/* Nested routes */}
+
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/groups" element={<Groups />} />
+            </Route>
+
+            <Route path="/call/:callType/:callId/" element={<Call />} />
+
           </Route>
-
-          <Route path="/call/:callType/:callId/" element={<Call />} />
-
         </Route>
-      </Route>
-    </Routes>
+      </Routes>
+
+    </div>
   );
 }
