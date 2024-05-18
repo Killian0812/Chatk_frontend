@@ -123,7 +123,7 @@ function GroupModal({ toggleModal, status, editGroup, onCreateGroup, onEditGroup
         // Background
         <div id="backmodal" className="w-screen h-screen bg-[rgba(39,38,38,0.5)] flex justify-center items-center fixed top-0 right-0 z-20 ">
             {/* Container */}
-            <div className={`w-[440px] pb-5 bg-white rounded-3xl flex-col z-20`}>
+            <div className={`w-[440px] pb-5 bg-[var(--page-bg)] rounded-3xl flex-col z-20`}>
                 {/* Header */}
                 <div className="h-[60px] bg-blue-500 flex items-center justify-between rounded-t-3xl ">
                     <h3 className="text-white font-bold text-[18px] pl-4 ">{status} Group</h3>
@@ -135,7 +135,7 @@ function GroupModal({ toggleModal, status, editGroup, onCreateGroup, onEditGroup
                 </div>
 
                 {/* Input Image */}
-                <div className="h-[90px] m-4 bg-gray-100 flex items-center justify-center ">
+                <div className="h-[90px] m-4 bg-[var(--page-bg)] flex items-center justify-center ">
                     <FaImages size={64} color=""
                         style={groupAvatar ? { display: "none" } : { color: "rgb(59 130 246 / var(--tw-bg-opacity))" }} />
                     {/* Preview Avatar */}
@@ -161,24 +161,26 @@ function GroupModal({ toggleModal, status, editGroup, onCreateGroup, onEditGroup
 
                 {/* Input Group Name */}
                 <div className="relative mx-4 ">
-                    <label htmlFor="groupname" className="absolute px-1 font-semibold bg-white left-3 z-30 text-blue-600 text-xs">Group Name</label>
+                    <label htmlFor="groupname" className="absolute px-1 font-semibold bg-[var(--page-bg)] left-3 z-30 text-blue-600 text-xs">Group Name</label>
                     <input
                         type="text"
                         id="groupname"
                         value={groupName}
-                        className="outline-0 absolute top-2 z-20 rounded-sm py-1.5 pl-3 w-full bg-white text-gray-900 border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
+                        className="outline-0 absolute top-2 z-20 rounded-sm py-1.5 pl-3 w-full bg-[var(--page-bg)]
+                         text-[var(--login-input-text-color)] border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
                         placeholder="Enter Group Name"
                         onChange={(e) => setGroupName(e.target.value)} />
                 </div>
 
                 {/* Add user */}
                 <div className="relative mt-20 mx-4 ">
-                    <label htmlFor="useradd" className="absolute px-1 font-semibold bg-white left-3 z-30 text-blue-600 text-xs">Add User</label>
+                    <label htmlFor="useradd" className="absolute px-1 font-semibold bg-[var(--page-bg)] left-3 z-30 text-blue-600 text-xs">Add User</label>
                     <input
                         type="text"
                         id="useradd"
                         value={userAdd}
-                        className="outline-0 absolute top-2 z-20 rounded-sm py-1.5 pl-3 w-[340px] bg-white text-gray-900 border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
+                        className="outline-0 absolute top-2 z-20 rounded-sm py-1.5 pl-3 w-[340px] bg-[var(--page-bg)]
+                         text-[var(--login-input-text-color)] border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
                         placeholder="Enter Username"
                         onChange={(e) => setUserAdd(e.target.value)} />
                     <button
@@ -201,7 +203,8 @@ function GroupModal({ toggleModal, status, editGroup, onCreateGroup, onEditGroup
                                             <img className="w-10 h-10 rounded-full object-cover" src={user.image} alt="" />
                                             <button onClick={() => removeUser(user._id)} className="top-0 left-10 rounded-full bg-red-600 font-bold text-[10px] text-white absolute w-3.5 h-3.5"> X </button>
                                         </div>
-                                        <p className="font-medium text-center text-black text-[14px] truncate max-w-[60px]">{user.username}</p>
+                                        <p className="font-medium text-center text-[var(--login-input-text-color)]
+                                         text-[14px] truncate max-w-[60px]">{user.username}</p>
                                     </div>
                                 </Tippy>
                             })

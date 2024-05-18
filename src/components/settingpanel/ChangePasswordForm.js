@@ -61,7 +61,7 @@ const ChangePasswordForm = () => {
             <div className="ml-5 mr-5 relative">
               <label
                 htmlFor="oldPassword"
-                className="absolute px-1 font-semibold bg-white left-3 z-20 text-blue-600 text-xs"
+                className="absolute px-1 font-semibold bg-[var(--settings-box-bg)] left-3 z-20 text-blue-600 text-xs"
               >
                 Current Password
               </label>
@@ -73,7 +73,9 @@ const ChangePasswordForm = () => {
                 <input
                   type="password"
                   id="oldPassword"
-                  className="outline-0 absolute top-2 z-10 rounded-sm py-1.5 pl-3 w-full bg-white text-gray-900 border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
+                  className="outline-0 absolute top-2 z-10 rounded-sm py-1.5 pl-3 w-full 
+                  bg-[var(--settings-box-bg)] text-[var(--login-input-text-color)] 
+                  border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
                   value={oldPassword}
                   onChange={(e) => setOldPassword(e.target.value)}
                 />
@@ -83,7 +85,7 @@ const ChangePasswordForm = () => {
             <div className="mt-5 ml-5 mr-5 relative">
               <label
                 htmlFor="newPassword"
-                className="absolute px-1 font-semibold bg-white left-3 z-20 text-blue-600 text-xs"
+                className="absolute px-1 font-semibold bg-[var(--settings-box-bg)] left-3 z-20 text-blue-600 text-xs"
               >
                 New Password
               </label>
@@ -95,7 +97,9 @@ const ChangePasswordForm = () => {
                 <input
                   type="password"
                   id="newPassword"
-                  className="outline-0 absolute top-2 z-10 rounded-sm py-1.5 pl-3 w-full bg-white text-gray-900 border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
+                  className="outline-0 absolute top-2 z-10 rounded-sm py-1.5 pl-3 w-full 
+                  bg-[var(--settings-box-bg)] text-[var(--login-input-text-color)] 
+                  border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                 />
@@ -105,7 +109,7 @@ const ChangePasswordForm = () => {
             <div className="mt-5 ml-5 mr-5 relative">
               <label
                 htmlFor="confirmNewPassword"
-                className="absolute px-1 font-semibold bg-white left-3 z-20 text-blue-600 text-xs"
+                className="absolute px-1 font-semibold bg-[var(--settings-box-bg)] left-3 z-20 text-blue-600 text-xs"
               >
                 Confirm New Password
               </label>
@@ -117,7 +121,9 @@ const ChangePasswordForm = () => {
                 <input
                   type="password"
                   id="confirmNewPassword"
-                  className="outline-0 absolute top-2 z-10 rounded-sm py-1.5 pl-3 w-full bg-white text-gray-900 border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
+                  className="outline-0 absolute top-2 z-10 rounded-sm py-1.5 pl-3 w-full 
+                  bg-[var(--settings-box-bg)] text-[var(--login-input-text-color)] 
+                  border-2 border-gray-300 duration-300 hover:border-cyan-600 focus:border-blue-700"
                   value={matchPassword}
                   onChange={(e) => setMatchPassword(e.target.value)}
                 />

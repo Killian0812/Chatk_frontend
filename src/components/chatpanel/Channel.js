@@ -37,10 +37,10 @@ const CustomChannel = (props) => {
   }
 
   return (
-    <div onClick={() => setActiveChannel?.(channel)} className="h-auto min-w-[300px] max-w-[350px] bg-[#F5F8FD]">
+    <div onClick={() => setActiveChannel?.(channel)} className="h-auto min-w-[300px] max-w-[350px] bg-[var(--channel-bg)]">
       <div className="py-0 flex flex-col overflow-hidden">
         <div className="overflow-auto">
-          <div className="flex items-center p-4 border-b border-gray-200 hover:bg-sky-100 hover:cursor-pointer">
+          <div className="flex items-center p-4 border-b border-[var(--channel-border-color)] hover:bg-[var(--channel-hover-bg)] hover:cursor-pointer">
             <div className="mr-4">
               <div className="relative">
                 <img
@@ -58,7 +58,7 @@ const CustomChannel = (props) => {
               {
                 isGroup && <span className="text-sm text-gray-500">{`Online: ${totalOnline}`}</span>
               }
-              <div className="font-medium text-black opacity-90">{(isGroup ? channel.data.name : otherMember.user_id) || 'Unnamed Channel'}
+              <div className="font-medium text-[var(--login-text-color)] opacity-90">{(isGroup ? channel.data.name : otherMember.user_id) || 'Unnamed Channel'}
               </div>
               <div className="text-xs truncate max-w-[180px] text-gray-500">{lastMessage?.text}</div>
             </div >
