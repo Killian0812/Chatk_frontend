@@ -7,35 +7,77 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-    --blue: #007bff;
-    --indigo: #6610f2;
-    --purple: #6f42c1;
-    --pink: #e83e8c;
-    --red: #dc3545;
-    --orange: #fd7e14;
-    --yellow: #ffc107;
-    --green: #28a745;
-    --teal: #20c997;
-    --cyan: #17a2b8;
-    --white: #fff;
-    --gray: #6c757d;
-    --gray-dark: #343a40;
-    --primary: #007bff;
-    --secondary: #6c757d;
-    --success: #28a745;
-    --info: #17a2b8;
-    --warning: #ffc107;
-    --danger: #dc3545;
-    --light: #f8f9fa;
-    --dark: #343a40;
-    --breakpoint-xs: 0;
-    --breakpoint-sm: 576px;
-    --breakpoint-md: 768px;
-    --breakpoint-lg: 992px;
-    --breakpoint-xl: 1200px;
-    --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+#theme.light {
+    --login-start-gradient: #06B6D4;
+    --login-end-gradient: #3A82F5;
+    --login-right-bg: #ffffff;
+    --login-form-container: #ffffff;
+    --login-text-color: black;
+    --login-input-text-color: black;
+    --autologin-bg: #F8FAFC;
+    --navbar-bg: #F8FAFC;
+    --active-tab-bg: #E5F0FF;
+    --tab-hover-bg: #F1F4F9;
+    --tab-icon-color: #3d3d3d;
+    --page-bg: #F5F8FD;
+    --search-bar-bg: white;
+    --user-search-result-hover: #E0F2FE;
+    --channel-bg: #F5F8FD;
+    --channel-border-color: rgb(229 231 235);
+    --channel-hover-bg: #E0F2FE;
+    --channel-header-bg: white;
+    --conversation-bg: #FFFFFF;
+    --group-bg: white;
+    --group-hover-bg: #EFF6FF;
+    --group-text: rgb(55 65 81);
+    --chat-bubble-other: #E9EAED;
+    --chat-bubble-own: #E0F0FF;
+    --file-attach: #FFFFFF;
+    --voice-attach-btn: #FFFFFF;
+    --second-chat-bg: #FFFFFF;
+    --second-chat-hover-bg: #e4e4e4;
+    --deleted-chat-bg: #E9EAED;
+    --deleted-chat-text: #72767e;
+    --settings-box-bg: #FFFFFF;
+    --file-input-container: #F2F4F9;
+    --file-input-btn: #FFFFFF;
+}
+
+#theme.dark {
+    --login-start-gradient: #127b96;
+    --login-end-gradient: #083daf;
+    --login-right-bg: #303841;
+    --login-border-color: #262E35;
+    --login-form-container: #262E35;
+    --login-text-color: white;
+    --login-input-text-color: white;
+    --autologin-bg: #303841;
+    --navbar-bg: #36404A;
+    --active-tab-bg: #262C33;
+    --tab-hover-bg: #3E4752;
+    --tab-icon-color: #A7B2BF;
+    --page-bg: #303841;
+    --search-bar-bg: #37404A;
+    --user-search-result-hover: #3e4752;
+    --channel-bg: #303841;
+    --channel-border-color: rgb(104, 104, 104);
+    --channel-hover-bg: #2C343E;
+    --channel-header-bg: #262E35;
+    --conversation-bg: #262E35;
+    --group-bg: #2a3138;
+    --group-hover-bg: #262E35;
+    --group-text: white;
+    --chat-bubble-other: #4B5561;
+    --chat-bubble-own: #37404A;
+    --file-attach: #2A333C;
+    --voice-attach-btn: #3d4751;
+    --second-chat-bg: #37404A;
+    --second-chat-hover-bg: #46515f;
+    --deleted-chat-bg: #2A333C;
+    --deleted-chat-text: #72767e;
+    --settings-box-bg: #262E35;
+    --file-input-container: #37404A;
+    --file-input-btn: #5d6b7b;
 }
 
 html {
@@ -49,18 +91,6 @@ html {
     margin: 0;
     padding: 0;
 }
-
-/* @layer theme {
-    .str-chat__theme-custom {
-        --str-chat__primary-color: #009688;
-        --str-chat__active-primary-color: #004d40;
-        --str-chat__surface-color: #f5f5f5;
-        --str-chat__secondary-surface-color: #fafafa;
-        --str-chat__primary-surface-color: #e0f2f1;
-        --str-chat__primary-surface-color-low-emphasis: #edf7f7;
-        --str-chat__border-radius-circle: 6px;
-    }
-} */
 
 html,
 body,
@@ -99,11 +129,33 @@ body {
     width: 100%;
     height: 99vh;
     --str-chat__font-family: 'Quicksand', sans-serif;
+    /* chat text */
+    --str-chat__text-color: var(--login-text-color);
+    /* other chat bubble */
+    --str-chat__message-bubble-background-color: var(--chat-bubble-other);
+    /* my chat bubble */
+    --str-chat__own-message-bubble-background-color: var(--chat-bubble-own);
+    /* file attach */
+    --str-chat__file-attachment-background-color: var(--file-attach);
+    /* voice attach */
+    --str-chat__voice-recording-attachment-widget-background-color: var(--file-attach);
+    /* voice attach btn */
+    --str-chat__audio-attachment-controls-button-background-color: var(--voice-attach-btn);
+    /* reaction */
+    --str-chat__secondary-background-color: var(--second-chat-bg);
+    /* hover on actions */
+    --str-chat__message-actions-box-item-hover-background-color: var(--second-chat-hover-bg);
+    /* thread */
+    --str-chat__thread-background-color: var(--conversation-bg);
+    /* deleted msg */
+    --str-chat__secondary-surface-color: var(--deleted-chat-bg);
+    /* deleted chat text */
+    --str-chat__deleted-message-color: var(--deleted-chat-text);
 }
 
 .str-chat__channel-list {
     width: 350px;
-    background-color: #F5F8FD;
+    background-color: var(--page-bg);
     height: 90vh;
 }
 
@@ -115,20 +167,28 @@ body {
 .str-chat__channel-search-results-header,
 .str-chat__channel-search-container,
 .str-chat__channel-search-result-list .str-chat__channel-search-container-empty {
-    background: #F5F8FD;
+    background-color: var(--page-bg);
 }
 
 .str-chat__channel-search-result-list .str-chat__channel-search-container-searching {
-    background: #F5F8FD;
-    color: #000000;
+    background-color: var(--page-bg);
+    color: var(--login-text-color);
 }
 
 .str-chat__container {
     width: 100%;
 }
 
+.str-chat__empty-channel {
+    background-color: var(--conversation-bg);
+}
+
+.str-chat__channel-search-input--wrapper {
+    background-color: var(--search-bar-bg);
+}
+
 .search-result-item:hover {
-    background-color: #E0F2FE;
+    background-color: var(--user-search-result-hover);
 }
 
 .str-chat__header-livestream {
@@ -136,7 +196,8 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 15px 50px 15px 20px;
-    border-bottom: 2px solid rgb(225, 225, 225);
+    border-bottom: 2px solid var(--channel-border-color);
+    background-color: var(--channel-header-bg);
 }
 
 .str-chat__avatar {
@@ -157,11 +218,17 @@ body {
     font-size: 17px;
     font-family: 'Quicksand', sans-serif;
     font-weight: bold;
-    color: #333;
+    color: var(--login-text-color);
 }
 
 .str-chat__message-attachment__voice-recording-widget__title {
     display: none;
+}
+
+.str-chat__list,
+.str-chat__main-panel,
+.str-chat__message-input {
+    background-color: var(--conversation-bg);
 }
 
 .call-button {
@@ -182,4 +249,8 @@ body {
 
 .str-video {
     width: 100%;
+}
+
+.S9gUrf-YoZ4jf {
+    background-color: #06B6D4;
 }
