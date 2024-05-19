@@ -8,7 +8,7 @@ function OldPasswordTooltip() {
   return `Must match current password of account`
 }
 function PasswordTooltip({ status, hasText }) {
-  return `Password must contain 6 to 24 characters, must include uppercase and lowercase letters ,
+  return `Password must contain 6 to 24 characters, must include uppercase and lowercase letters,
    a number, a special character ${hasText === "" ? "" : (status ? '✅' : '❌')}`
 }
 function PasswordCfTooltip({ status, hasText }) {

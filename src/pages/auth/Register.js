@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Tippy from "@tippyjs/react";
 import useAuth from "../../hooks/useAuth";
+import TeamIntro from "../../components/TeamIntro";
 
 const USERNAME_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%_?]).{6,24}$/;
@@ -12,7 +13,7 @@ function UsernameTooltip({ status, hasText }) {
     return `Username must contain 4 to 24 characters and start with a letter ${hasText === "" ? "" : (status ? '✅' : '❌')} `
 }
 function PasswordTooltip({ status, hasText }) {
-    return `Password must contain 6 to 24 characters, must include uppercase and lowercase letters ,
+    return `Password must contain 6 to 24 characters, must include uppercase and lowercase letters,
      a number, a special character ${hasText === "" ? "" : (status ? '✅' : '❌')}`
 }
 function EmailTooltip({ status, hasText }) {
@@ -123,7 +124,7 @@ function Register() {
         <div className="h-screen w-screen flex bg-[var(--login-right-bg)]">
             {/* left theme */}
             <div className="h-full w-1/2 bg-gradient-to-r from-[--login-start-gradient] to-[--login-end-gradient] flex-auto">
-
+                <TeamIntro />
             </div>
             {/* right theme */}
             <div className="h-full w-1/2 flex items-center justify-center">
