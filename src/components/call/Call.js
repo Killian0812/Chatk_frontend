@@ -25,7 +25,7 @@ export default function Call() {
         const user = {
             id: userId,
             name: username,
-            image: `https://getstream.io/random_svg/?id=oliver&name=${auth.image || username}`,
+            image: `${auth.image || `https://getstream.io/random_svg/?id=oliver&name=${username}`}`,
         };
 
         const videoClient = new StreamVideoClient({ apiKey, user, token });

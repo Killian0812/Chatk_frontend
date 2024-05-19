@@ -4,6 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import useAuth from "../../hooks/useAuth";
 import useTheme from "../../hooks/useTheme";
 import axios from "axios";
+import TeamIntro from "../../components/TeamIntro";
 
 function Login() {
 
@@ -21,31 +22,31 @@ function Login() {
 
     const { theme } = useTheme();
 
-    async function handleCallbackResponse(response) {
-        const GoogleUserInfo = jwtDecode(response.credential);
-        // console.log(GoogleUserInfo);
-        try {
-            const response = await axios.post('/api/auth/google', {
-                email: GoogleUserInfo.email,
-                name: GoogleUserInfo.name,
-                picture: GoogleUserInfo.picture
-            });
-            console.log(response.data);
-            const username = response?.data?.username;
-            const accessToken = response?.data?.accessToken;
-            const fullname = response?.data?.fullname;
-            const email = response?.data?.email;
-            const streamToken = response?.data?.streamToken;
-            const image = response?.data?.image;
-            setAuth({ username, fullname, email, accessToken, streamToken, image });
-            navigate('/', { replace: true });
-        } catch (error) {
-            console.log(error);
-            alert('Unexpected error');
-        }
-    }
-
     useEffect(() => {
+        async function handleCallbackResponse(response) {
+            const GoogleUserInfo = jwtDecode(response.credential);
+            // console.log(GoogleUserInfo);
+            try {
+                const response = await axios.post('/api/auth/google', {
+                    email: GoogleUserInfo.email,
+                    name: GoogleUserInfo.name,
+                    picture: GoogleUserInfo.picture
+                });
+                console.log(response.data);
+                const username = response?.data?.username;
+                const accessToken = response?.data?.accessToken;
+                const fullname = response?.data?.fullname;
+                const email = response?.data?.email;
+                const streamToken = response?.data?.streamToken;
+                const image = response?.data?.image;
+                setAuth({ username, fullname, email, accessToken, streamToken, image });
+                navigate('/', { replace: true });
+            } catch (error) {
+                console.log(error);
+                alert('Unexpected error');
+            }
+        }
+
         const btnTheme = `${theme === 'dark' ? 'filled_blue' : 'outline'}`;
         /* global google */
         google.accounts.id.initialize({
@@ -57,7 +58,7 @@ function Login() {
             document.getElementById('signInWithGoogle'),
             { theme: btnTheme, size: 'large', text: 'Sign in with Google' }
         );
-    });
+    }, [navigate, setAuth, theme]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -101,7 +102,7 @@ function Login() {
         <div className="h-screen w-screen flex bg-[var(--login-right-bg)]">
             {/* left theme */}
             <div className="h-full w-1/2 bg-gradient-to-r from-[--login-start-gradient] to-[--login-end-gradient] flex-auto">
-
+                <TeamIntro inLoginPage />
             </div>
             {/* right theme */}
             <div className="h-full w-1/2 flex items-center justify-center">

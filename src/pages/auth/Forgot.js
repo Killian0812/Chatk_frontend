@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Tippy from "@tippyjs/react";
 import axios from "axios";
+import TeamIntro from "../../components/TeamIntro";
 
 const EMAIL_REGEX = /^([^\s@]+@[^\s@]+\.[^\s@]+)$/;
 
@@ -47,7 +48,7 @@ function Forgot() {
         <div className="h-screen w-screen flex bg-[var(--login-right-bg)]">
             {/* left theme */}
             <div className="h-full w-1/2 bg-gradient-to-r from-[--login-start-gradient] to-[--login-end-gradient] flex-auto">
-
+                <TeamIntro />
             </div>
             {/* right theme */}
             <div className="h-full w-1/2 flex items-center justify-center">
